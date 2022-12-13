@@ -131,21 +131,24 @@ class _Sign_upState extends State<Sign_up> {
                 height: 16.0,
               ),
 
-              // TextFormField(
-              //   obscureText: true,
-              //   decoration: InputDecoration(
-              //     icon: Icon(Icons.vpn_key),
-              //     labelText: "비밀번호를 한번 더 입력해주세요",
-              //     border: OutlineInputBorder(),
-              //     hintText: 'password'
-              //   ),
-              //   validator: (password) {
-              //     if (password != passwordController) {
-              //       return "비밀번호가 일치하지 않습니다.";
-              //     }
-              //     return null;
-              //   },
-              // ),
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.vpn_key),
+                  labelText: "비밀번호를 한번 더 입력해주세요",
+                  border: OutlineInputBorder(),
+                  hintText: 'password'
+                ),
+                validator: (password) {
+                  if (password != passwordController.text) {
+                    return "비밀번호가 일치하지 않습니다.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
               
               TextFormField(
                 controller: nameController, // name

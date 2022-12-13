@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:project_flutter/pages/data_table.dart';
@@ -6,6 +9,7 @@ import 'package:project_flutter/pages/sign_up.dart';
 import 'package:project_flutter/pages/show_device_db.dart';
 import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/mysql.dart';
+import 'package:crypto/src/sha256.dart' as sha;
 
 void main() => runApp(LoginPage());
 
@@ -20,12 +24,20 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
- 
+
   @override
   void dispose() {
     super.dispose();
     idController.dispose();
     passwordController.dispose();
+  }
+
+  Digest encrypt() { // 추가
+    var bytes = utf8.encode('${passwordController.text}');
+
+    Digest sha256Result = sha.sha256.convert(bytes);
+
+    return sha256Result; // 암호화 한 값
   }
 
   Future<List<Profiles>> getSQLData() async {
@@ -38,8 +50,14 @@ class _LoginPageState extends State<LoginPage> {
           .then((result) {
         String pass = result.toString();
         String test_pass = passwordController.text.toString();
-        String pw = pass.substring(20, pass.length - 2);
-        if (pw == test_pass) {
+        String pw = pass.substring(20, pass.length - 2); // db에 저장된 비밀번호
+
+        Digest encrpyted_password = encrypt(); //추가
+
+        String testttt = encrpyted_password.toString(); // 추가
+
+        //if (pw == test_pass) {
+          if (pw == testttt) {
           print("패스워드 일치");
           Navigator.push(
               context,
