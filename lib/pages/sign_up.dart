@@ -34,22 +34,17 @@ class _Sign_upState extends State<Sign_up> {
 
     Digest sha256Result = sha.sha256.convert(bytes);
 
-    // print('SHA256: $sha256Result');
-
-    return sha256Result;
+    return sha256Result; // 암호화 한 값
   }
 
   void insertData() async {
-    print(passwordController.text);
-    Digest encodepass = encrypt();
-
-    print(encodepass.toString());
+    Digest encrpyted_password = encrypt();
     db.getConnection().then((conn) {
       String sqlQuery =
           'INSERT into User (ID, Password, Name, Phone_Number, Address, Email) values (?, ?, ?, ?, ?, ?)';
       conn.query(sqlQuery, [
         idController.text,
-        encodepass.toString(),
+        encrpyted_password.toString(), // 암호화 된 비밀번호
         nameController.text,
         phonenumberController.text,
         addressController.text,
@@ -129,12 +124,7 @@ class _Sign_upState extends State<Sign_up> {
                   if (password!.isEmpty) {
                     return "비밀번호를 입력해주세요.";
                   }
-                  Digest ttt = encrypt();
-                  print('기존');
-                  print(password);
-                  print('변환');
-                  print(ttt);
-                  return password;
+                  return null;
                 },
               ),
               SizedBox(

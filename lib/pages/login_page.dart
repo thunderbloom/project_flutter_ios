@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:project_flutter/pages/data_table.dart';
 import 'package:project_flutter/pages/device_page.dart';
-import 'package:project_flutter/pages/password_encrypt.dart';
+import 'package:project_flutter/pages/sign_up.dart';
 import 'package:project_flutter/pages/show_device_db.dart';
 import 'package:project_flutter/pages/show_user_db.dart';
-import 'package:project_flutter/pages/signup.dart';
 import 'package:project_flutter/pages/mysql.dart';
 
 void main() => runApp(LoginPage());

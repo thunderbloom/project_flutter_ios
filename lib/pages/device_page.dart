@@ -50,34 +50,6 @@ class _DevicePageState extends State<DevicePage> {
     devices.add("Device1");
   }
 
-  // Future<List<Devices>> deleteData() async {
-  //   final List<Devices> deviceList = [];
-  //   final Mysql db = Mysql();
-  //   await db.getConnection().then((conn) async {
-  //     print("데이터 삭제");
-  //     String test = idController.text.toString();
-  //     await conn
-  //         .query("SELECT Serial_Number FROM Device WHERE id = 'sdf'")
-  //         .then((result) {
-  //       String device = result.toString();
-  //       String dv = device.substring(25, device.length - 2);
-  //       print(dv);
-  //       if (dv == 'wsd') {
-  //         print("일치");
-  //         delete() async {
-  //           await conn 
-  //                 .query("delete Serial_Number from Device");
-  //         };
-  //       } else 
-  //         setState(() {
-            
-  //         }); 
-  //     });
-  //     setState(() {});
-  //   });
-  //   return deviceList;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +144,6 @@ class _DevicePageState extends State<DevicePage> {
                       onPressed: () {
                         setState(() {
                           devices.removeAt(index);
-                          // deleteData();
                         });
                       },
                     ),

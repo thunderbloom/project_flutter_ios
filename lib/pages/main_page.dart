@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_flutter/pages/device_page.dart';
-import 'package:project_flutter/pages/password_encrypt.dart';
-import 'package:project_flutter/pages/signup.dart';
+import 'package:project_flutter/pages/sign_up.dart';
 void main() {
   runApp(MaterialApp(
     title: 'Main page',
