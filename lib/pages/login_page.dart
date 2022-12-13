@@ -6,6 +6,7 @@ import 'package:project_flutter/pages/show_device_db.dart';
 import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/signup.dart';
 import 'package:project_flutter/pages/mysql.dart';
+import 'package:project_flutter/pages/main_page.dart';
 
 void main() => runApp(LoginPage());
 
@@ -20,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
- 
+
   @override
   void dispose() {
     super.dispose();
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => Sign_up())); // 메인화면으로 바꿀것
+                  builder: (BuildContext context) => Loding())); // 메인화면으로 바꿀것
         } else
           setState(() {
             print("패스워드 불일치");
