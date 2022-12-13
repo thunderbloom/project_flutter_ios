@@ -32,7 +32,8 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
-  Digest encrypt() { // 추가
+  Digest decrypt() {
+    // 추가
     var bytes = utf8.encode('${passwordController.text}');
 
     Digest sha256Result = sha.sha256.convert(bytes);
@@ -52,12 +53,11 @@ class _LoginPageState extends State<LoginPage> {
         String test_pass = passwordController.text.toString();
         String pw = pass.substring(20, pass.length - 2); // db에 저장된 비밀번호
 
-        Digest encrpyted_password = encrypt(); //추가
+        Digest decrpyted_password = decrypt(); //추가
 
-        String testttt = encrpyted_password.toString(); // 추가
+        String pass_decrypt = decrpyted_password.toString(); // 추가
 
-        //if (pw == test_pass) {
-          if (pw == testttt) {
+        if (pw == pass_decrypt) {
           print("패스워드 일치");
           Navigator.push(
               context,
