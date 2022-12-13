@@ -1,26 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:project_flutter/pages/device_page.dart';
-import 'package:project_flutter/pages/password_encrypt.dart';
-import 'package:project_flutter/pages/signup.dart';
-void main() {
-  runApp(MaterialApp(
-    title: 'Main page',
-    home: MainPage(),
-  ));
-}
-
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-=======
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
->>>>>>> junyong
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
