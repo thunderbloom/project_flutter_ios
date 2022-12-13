@@ -42,7 +42,7 @@ dependencies:
   dart_frog: ^0.3.1
   mysql_client: ^0.0.27
   flutter_secure_storage: ^7.0.0
-  # cryto: ^3.0.2
+  crypto: ^3.0.2
 
 dev_dependencies:
   flutter_test:
