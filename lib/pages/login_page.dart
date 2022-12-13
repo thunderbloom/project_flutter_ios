@@ -10,6 +10,7 @@ import 'package:project_flutter/pages/show_device_db.dart';
 import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:crypto/src/sha256.dart' as sha;
+import 'package:project_flutter/pages/main_page.dart';
 
 void main() => runApp(LoginPage());
 
@@ -62,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => Sign_up())); // 메인화면으로 바꿀것
+                  builder: (BuildContext context) => Loding())); // 메인화면으로 바꿀것
         } else
           setState(() {
             print("패스워드 불일치");
