@@ -10,6 +10,7 @@ import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:crypto/src/sha256.dart' as sha;
 import 'package:project_flutter/pages/main_page.dart';
+import 'package:project_flutter/views/home_screen.dart';
 
 void main() => runApp(LoginPage());
 
@@ -172,16 +173,29 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   ),
+                  // SizedBox(width: 10.0),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Color(0xff1160aa),
+                  //       foregroundColor: Colors.white),
+                  //   child: Text('디바이스정보'),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => DeviceData()),
+                  //     );
+                  //   },
+                  // ),
                   SizedBox(width: 10.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff1160aa),
                         foregroundColor: Colors.white),
-                    child: Text('디바이스정보'),
+                    child: Text('날씨'),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DeviceData()),
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
                       );
                     },
                   ),
