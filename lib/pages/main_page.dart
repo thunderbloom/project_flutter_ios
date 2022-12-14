@@ -33,7 +33,7 @@ class _LodingState extends State<Loding> {
     ),
   ];
   List<Widget> _demo = [
-    Container(height: 300, color: Colors.amber),
+    Container(height: 300, color: Colors.red),
     Container(height: 300, color: Colors.black),
     Container(height: 300, color: Colors.blue),
     Container(height: 300, color: Colors.green),
