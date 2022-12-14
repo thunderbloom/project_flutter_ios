@@ -242,7 +242,6 @@ packages:
     version: "0.1.1"
   get:
     dependency: "direct main"
-    dependency: transitive
     description:
       name: get
       url: "https://pub.dartlang.org"
@@ -610,16 +609,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  xml:
-    dependency: transitive
-    description:
-      name: xml
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.1.0"
-sdks:
-  dart: ">=2.18.5 <3.0.0"
-  flutter: ">=2.11.0-0.1.pre"
   win32:
     dependency: transitive
     description:
@@ -634,6 +623,13 @@ sdks:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0+2"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.0"
 sdks:
   dart: ">=2.18.5 <3.0.0"
   flutter: ">=3.0.0"
