@@ -1,4 +1,5 @@
 import 'package:crypto/crypto.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:mysql_client/mysql_protocol.dart';
 import 'package:crypto/src/sha256.dart' as sha;
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:project_flutter/pages/data_table.dart';
+import 'package:project_flutter/pages/signup_after.dart';
 
 void main() => runApp(Sign_up());
 
@@ -34,22 +36,17 @@ class _Sign_upState extends State<Sign_up> {
 
     Digest sha256Result = sha.sha256.convert(bytes);
 
-    // print('SHA256: $sha256Result');
-
-    return sha256Result;
+    return sha256Result; // 암호화 한 값
   }
 
   void insertData() async {
-    print(passwordController.text);
-    Digest encodepass = encrypt();
-
-    print(encodepass.toString());
+    Digest encrpyted_password = encrypt();
     db.getConnection().then((conn) {
       String sqlQuery =
           'INSERT into User (ID, Password, Name, Phone_Number, Address, Email) values (?, ?, ?, ?, ?, ?)';
       conn.query(sqlQuery, [
         idController.text,
-        encodepass.toString(),
+        encrpyted_password.toString(), // 암호화 된 비밀번호
         nameController.text,
         phonenumberController.text,
         addressController.text,
@@ -73,6 +70,7 @@ class _Sign_upState extends State<Sign_up> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
@@ -106,7 +104,7 @@ class _Sign_upState extends State<Sign_up> {
                     labelText: "아이디를 입력해주세요.",
                     border: OutlineInputBorder(),
                     hintText: 'ID'),
-                validator: (id) {
+                validator: (String? id) {
                   if (id!.isEmpty) {
                     return "아이디를 입력해주세요.";
                   }
@@ -125,37 +123,35 @@ class _Sign_upState extends State<Sign_up> {
                     labelText: "회원가입할 비밀번호를 입력해주세요.",
                     border: OutlineInputBorder(),
                     hintText: 'password'),
-                validator: (password) {
+                validator: (String? password) {
                   if (password!.isEmpty) {
                     return "비밀번호를 입력해주세요.";
                   }
-                  Digest ttt = encrypt();
-                  print('기존');
-                  print(password);
-                  print('변환');
-                  print(ttt);
-                  return password;
+                  return null;
                 },
               ),
               SizedBox(
                 height: 16.0,
               ),
 
-              // TextFormField(
-              //   obscureText: true,
-              //   decoration: InputDecoration(
-              //     icon: Icon(Icons.vpn_key),
-              //     labelText: "비밀번호를 한번 더 입력해주세요",
-              //     border: OutlineInputBorder(),
-              //     hintText: 'password'
-              //   ),
-              //   validator: (password) {
-              //     if (password != passwordController) {
-              //       return "비밀번호가 일치하지 않습니다.";
-              //     }
-              //     return null;
-              //   },
-              // ),
+              TextFormField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.vpn_key),
+                  labelText: "비밀번호를 한번 더 입력해주세요",
+                  border: OutlineInputBorder(),
+                  hintText: 'password'
+                ),
+                validator: (password) {
+                  if (password != passwordController.text) {
+                    return "비밀번호가 일치하지 않습니다.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
               
               TextFormField(
                 controller: nameController, // name
@@ -236,7 +232,7 @@ class _Sign_upState extends State<Sign_up> {
                     insertData();
                     print("정상적으로 회원가입이 되었습니다.");
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                        MaterialPageRoute(builder: (context) => Signup_after()));
                   },
                   child: Text('회원가입'),
                 ),
