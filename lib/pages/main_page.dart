@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,11 +33,74 @@ class _LodingState extends State<Loding> {
       style: optionStyle,
     ),
   ];
+  // ignore: prefer_final_fields
+  //boxShadow: [
+  //          BoxShadow(
+  //            color: Colors.grey,
+  //            blurRadius: 5.0,
+  //            spreadRadius: 3.0,
+  //          ),
+  //        ],
   List<Widget> _demo = [
-    Container(height: 300, color: Colors.red),
-    Container(height: 300, color: Colors.black),
-    Container(height: 300, color: Colors.blue),
-    Container(height: 300, color: Colors.green),
+    Container(
+      padding: EdgeInsets.all(75),
+      decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.black, style: BorderStyle.solid, width: 5),
+          image: DecorationImage(
+              alignment: Alignment.centerLeft,
+              image: AssetImage('assets/images/resizedsensor.png'),
+              fit: BoxFit.scaleDown),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.red),
+      child: Text('Sensor',
+          style: TextStyle(color: Colors.black, fontSize: 25),
+          textAlign: TextAlign.center),
+      height: 200,
+    ),
+    Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.black, style: BorderStyle.solid, width: 5),
+          image: DecorationImage(
+            alignment: Alignment.centerLeft,
+            image: AssetImage('assets/images/cctv1.png'),
+          ),
+          borderRadius: BorderRadius.circular(15)),
+      child: Text('Camera',
+          style: TextStyle(color: Colors.black, fontSize: 25),
+          textAlign: TextAlign.center),
+      height: 200,
+    ),
+    Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+            alignment: Alignment.centerLeft,
+            image: AssetImage('assets/images/plus.png'),
+          ),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.blue),
+      child: Text('기기등록',
+          style: TextStyle(color: Colors.black, fontSize: 25),
+          textAlign: TextAlign.center),
+      height: 200,
+    ),
+    Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+            alignment: Alignment.centerLeft,
+            image: AssetImage('assets/images/plus.png'),
+          ),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.green),
+      child: Text('기기등록',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 25,
+          ),
+          textAlign: TextAlign.center),
+      height: 200,
+    ),
   ];
 
   void _onItemTapped(int index) {

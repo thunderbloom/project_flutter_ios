@@ -73,6 +73,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/temp_logo.jpg
+    - assets/images/cam.png
+    - assets/images/sensor.png
+    - assets/images/cctv1.png
+    - assets/images/cctv2.png
+    - assets/images/plus.png
+    - assets/images/resizedsensor.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
