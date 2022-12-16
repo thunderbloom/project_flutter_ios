@@ -159,10 +159,12 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Sign_up()));
             }),
-        TextButton( 
+        TextButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ForgotPasswordPage()));
             },
             child: Text('비밀번호 찾기',
                 style: TextStyle(color: Color.fromARGB(214, 0, 0, 0))))

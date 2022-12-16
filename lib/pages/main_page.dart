@@ -1,17 +1,19 @@
-<<<<<<< HEAD
-import 'dart:developer';
-import 'dart:ui';
-
-=======
->>>>>>> main
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project_flutter/widgets/discover_card.dart';
+import 'package:project_flutter/widgets/svg_asset.dart';
+import 'package:project_flutter/widgets/icons.dart';
+import 'package:badges/badges.dart';
+
+import 'package:project_flutter/views/home_screen.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -20,6 +22,16 @@ class Loding extends StatefulWidget {
 }
 
 class _LodingState extends State<Loding> {
+  @override
+  int _counter = 0;
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  //bool showElevatedButtonBadge = true;
+
   int _selectedIndex = 0;
   int pageIndex = 0;
   static const TextStyle optionStyle =
@@ -29,7 +41,7 @@ class _LodingState extends State<Loding> {
       Get.put(GlobalController(), permanent: true);
   //-----------------------------------------------
   final RxBool _isLoading = true.obs;
-    //-------------------------------------
+  //-------------------------------------
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 0: Menu',
@@ -44,75 +56,6 @@ class _LodingState extends State<Loding> {
       style: optionStyle,
     ),
   ];
-  // ignore: prefer_final_fields
-  //boxShadow: [
-  //          BoxShadow(
-  //            color: Colors.grey,
-  //            blurRadius: 5.0,
-  //            spreadRadius: 3.0,
-  //          ),
-  //        ],
-  List<Widget> _demo = [
-    Container(
-      padding: EdgeInsets.all(75),
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.black, style: BorderStyle.solid, width: 5),
-          image: DecorationImage(
-              alignment: Alignment.centerLeft,
-              image: AssetImage('assets/images/resizedsensor.png'),
-              fit: BoxFit.scaleDown),
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.red),
-      child: Text('Sensor',
-          style: TextStyle(color: Colors.black, fontSize: 25),
-          textAlign: TextAlign.center),
-      height: 200,
-    ),
-    Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.black, style: BorderStyle.solid, width: 5),
-          image: DecorationImage(
-            alignment: Alignment.centerLeft,
-            image: AssetImage('assets/images/cctv1.png'),
-          ),
-          borderRadius: BorderRadius.circular(15)),
-      child: Text('Camera',
-          style: TextStyle(color: Colors.black, fontSize: 25),
-          textAlign: TextAlign.center),
-      height: 200,
-    ),
-    Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-            alignment: Alignment.centerLeft,
-            image: AssetImage('assets/images/plus.png'),
-          ),
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.blue),
-      child: Text('기기등록',
-          style: TextStyle(color: Colors.black, fontSize: 25),
-          textAlign: TextAlign.center),
-      height: 200,
-    ),
-    Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-            alignment: Alignment.centerLeft,
-            image: AssetImage('assets/images/plus.png'),
-          ),
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.green),
-      child: Text('기기등록',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 25,
-          ),
-          textAlign: TextAlign.center),
-      height: 200,
-    ),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -121,87 +64,190 @@ class _LodingState extends State<Loding> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xff1160aa)), //보류 (필요없을거같음)
-      backgroundColor: Colors.white,
+    return GetMaterialApp(
+      home: Scaffold(
+        appBar: AppBar(backgroundColor: Color(0xff1160aa)), //보류 (필요없을거같음)
+        backgroundColor: Colors.white,
 
-      body: SafeArea(
-        child: Obx(() => globalController.checkLoading().isTrue
-            ? const Center(
-                child: CircularProgressIndicator(),
-                            
-                )
-                
-      //--------------------------------
-            :Center(
-              child: ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                  children: <Widget>[
-                    CarouselIndicator(
-                      count: _demo.length,
-                      index: pageIndex,
-                    ),
-                    Text(
-                        textAlign: TextAlign.center,
-                        '우리집 수호천사',
-                        style: TextStyle(
-                            color: Color(0xff1160aa),
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    const HeaderWidget(),
-                          CurrentWeatherWidget(
-                            weatherDataCurrent:
-                                globalController.getWeatherData().getCurrentWeather(),
+        body: SafeArea(
+          child: Obx(
+            () => globalController.checkLoading().isTrue
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Center(
+                    child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                        //--------새로한거------
+                        physics: BouncingScrollPhysics(),
+                        //--------------
+                        children: <Widget>[
+                          Text(
+                              textAlign: TextAlign.center,
+                              '우리집 수호천사',
+                              style: TextStyle(
+                                  color: Color(0xff1160aa),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            height: 15,
                           ),
-                    
-                    SizedBox(height: 15),
-                    InkWell(
-                      onTap: () {
-                        print('기기등록');
-                      },
-                      child: Container(
-                        height: 200,
-                        width: double.infinity,
-                        child: PageView(
-                          children: _demo,
-                          onPageChanged: (index) {
-                            setState(() {
-                              pageIndex = index;
-                            });
-                          },
-                        ),
-                      ),
-                    )
-                    
-                  ]),
-            ),
+                          const HeaderWidget(),
+                          CurrentWeatherWidget(
+                            weatherDataCurrent: globalController
+                                .getWeatherData()
+                                .getCurrentWeather(),
+                          ),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: EdgeInsets.only(left: 28),
+                            child: Text(
+                              "바로가기",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          SizedBox(
+                            height: 176,
+                            child: ListView(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                SizedBox(width: 15),
+                                DiscoverCard(
+                                  tag: "sensor",
+                                  onTap: sensor,
+                                  title: "sensor",
+                                  subtitle: "정보를 확인하세요!",
+                                  icons: SvgAsset(
+                                    assetName: AssetName.headphone,
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                  //--------------------------------
+                                  icon: SvgAsset(),
+                                  children: [],
+                                  //--------------------------------
+                                ),
+                                SizedBox(width: 22),
+                                DiscoverCard(
+                                  onTap: cctv,
+                                  title: "CCTV",
+                                  subtitle: "녹화영상 확인",
+                                  gradientStartColor: Color(0xffFC67A7),
+                                  gradientEndColor: Color(0xffF6815B),
+                                  icons: SvgAsset(
+                                    assetName: AssetName.sensor,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                  //--------------------------------
+                                  icon: SvgAsset(),
+                                  children: [],
+                                  //--------------------------------
+                                ),
+                                SizedBox(width: 22),
+                                DiscoverCard(
+                                  onTap: adddevice,
+                                  title: "기기등록",
+                                  subtitle: "+",
+                                  gradientStartColor: Color(0xff441DFC),
+                                  gradientEndColor: Color(0xffF6815B),
+                                  icons: SvgAsset(
+                                    assetName: AssetName.sensor,
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                  //--------------------------------
+                                  icon: SvgAsset(),
+                                  children: [],
+                                  //--------------------------------
+                                ),
+                                SizedBox(width: 22),
+                                DiscoverCard(
+                                  onTap: adddevice,
+                                  title: "기기등록",
+                                  subtitle: "+",
+                                  gradientStartColor: Color(0xff13DEA0),
+                                  gradientEndColor: Color(0xffF0B31A),
+                                  icons: SvgAsset(
+                                    assetName: AssetName.sensor,
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                  //--------------------------------
+                                  icon: SvgAsset(),
+                                  children: [],
+                                  //--------------------------------
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]),
+                  ),
+          ),
         ),
-      ),
-      bottomNavigationBar: 
-          BottomNavigationBar(
+
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: '알림',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'My page',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xff1160aa),
-        onTap: _onItemTapped,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu),
+              label: 'Menu',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: '알림',
+              //icon: Stack(
+              //  children: <Widget>[
+              //    Icon(Icons.notifications),
+              //    Positioned(
+              //      right:0,
+              //      child: Container(
+              //        padding: EdgeInsets.all(1),
+              //        decoration: BoxDecoration(
+              //          color: Colors.red,
+              //          borderRadius: BorderRadius.circular(6),
+              //        ),
+              //        constraints: BoxConstraints(
+              //          minWidth: 12,
+              //          minHeight: 12,
+              //        ),
+              //        child: Text('1'
+              //        style: TextStyle(
+              //          color:Colors.white,
+              //          fontSize: 8,
+              //        ),
+              //        textAlign: TextAlign.center,
+              //        ),
+              //      ),
+              //      ),
+              //  ],
+              //  ),
+              //  label: '알림'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'My page',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Color(0xff1160aa),
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
+
+  void sensor() {
+    Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
+  }
+
+  void cctv() {}
+  void adddevice() {}
 }
