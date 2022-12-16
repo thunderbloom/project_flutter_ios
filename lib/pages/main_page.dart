@@ -6,6 +6,12 @@ import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:project_flutter/mqtt/mqtt_client_widget.dart';
+import 'package:project_flutter/views/home_screen.dart';
+// import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
+//import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/widgets/discover_card.dart';
@@ -42,20 +48,20 @@ class _LodingState extends State<Loding> {
   //-----------------------------------------------
   final RxBool _isLoading = true.obs;
   //-------------------------------------
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Menu',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: 알림',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: My page',
-      style: optionStyle,
-    ),
-  ];
+  //static const List<Widget> _widgetOptions = <Widget>[
+  //  Text(
+  //    'Index 0: Menu',
+  //    style: optionStyle,
+  //  ),
+  //  Text(
+  //    'Index 1: 알림',
+  //    style: optionStyle,
+  //  ),
+  //  Text(
+  //    'Index 2: My page',
+  //    style: optionStyle,
+  //  ),
+  //];
 
   void _onItemTapped(int index) {
     setState(() {
