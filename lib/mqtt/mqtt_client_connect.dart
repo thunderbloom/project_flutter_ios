@@ -2,46 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:project_flutter/pages/notification_service.dart';
-
+import 'package:project_flutter/pages/notification_service.dart';
 import 'dart:io';
 import 'package:get/get.dart';
-
-// void _showDialog(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: new Text("Alert!!"),
-//         content: new Text("You are awesome!"),
-//         actions: <Widget>[
-//           new TextButton(
-//             child: new Text("OK"),
-//             onPressed: () {
-//               Navigator.of(context).pop();
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
-
-// void openDialog() {  
-//   print('dialog');
-//   Get.dialog(
-//     AlertDialog(
-//       title: const Text('test'),
-//       content: const Text('test body'),
-//       actions: [
-//         TextButton(
-//           child: const Text("Close"),
-//           onPressed: () => Get.back(),
-//         ),
-//       ],
-//     ),
-//   );
-// } 
 
 
 Future<MqttClient> connect() async {
@@ -57,8 +20,6 @@ Future<MqttClient> connect() async {
   client.port = 19883;
   client.onSubscribeFail = onSubscribeFail;
   client.pongCallback = pong;
-
-  // NotificationService notificationService = NotificationService();
   
   final connMess = MqttConnectMessage()
       .withClientIdentifier("ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f")
@@ -99,24 +60,22 @@ Future<MqttClient> connect() async {
       // final MqttMessage message = c[0].payload;
       // final payload = 
       //   MqttPublishPayload.bytesToStringAsString(message.toString()); //.payload.message;
-      // await notificationService.showNotification(0, 'This is title...', "Tis is body...",);
+      
       // print('Received message:$payload from topic: ${c[0].topic}>');
-      // NotificationService()
-      // .showNotification(1, 'check your mailbox', 'you have new mail', 1);
-      // await notificationService.showNotification(1, 'This is title...', "This is body...",);
-      // openDialog();
-      print('Received message: from topic: ${c[0].topic}>');
-      
-      
-      
+      NotificationService()
+      .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 움직임이 감지되었습니다',);
+
+      print('Received message: from topic: ${c[0].topic}>');  
     });
 
     client.published?.listen((MqttPublishMessage message) {
       print('published');
       final payload =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
-      // openDialog();
-      // await notificationService.showNotification(0, 'This is title...', "This is body...",);     
+
+      // NotificationService()
+      // .showNotification(0, '새로운 알림이 있습니다', '${message.variableHeader?.topicName}에서 $payload.',);
+
       print(        
         'Published message: $payload to topic: ${message.variableHeader?.topicName}'
       );

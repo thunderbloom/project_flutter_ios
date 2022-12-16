@@ -32,14 +32,10 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   
-  // late MqttClient client;
-  // var topic = "house/door";
+
 
   Future singIn() async {
-    // connect().then((value) {
-    //               client = value;
-    //             });
-    
+
     await db.getConnection().then((conn) async {
       await conn
           .query("SELECT Password FROM User WHERE ID = '${idController.text}'")
@@ -49,24 +45,20 @@ class _LoginPageState extends State<LoginPage> {
         password:
         passwordController.text.toString();
       });
-    });
-    
+    });   
   }
-
-
 
   Future<List<Profiles>> getSQLData() async {
     final List<Profiles> profileList = [];
     final Mysql db = Mysql();
     late MqttClient client;
     var topic = "house/door";
-    
 
-    await connect().then((value) {
-                      client = value;
-                    });
+    // await connect().then((value) {
+    //                   client = value;
+    //                 });
     
-    await client.subscribe(topic, MqttQos.atLeastOnce);
+    // await client.subscribe(topic, MqttQos.atLeastOnce);
  
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
@@ -85,6 +77,11 @@ class _LoginPageState extends State<LoginPage> {
           print("패스워드 일치");
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
+          
+          connect().then((value) {  // ------------------------MQTT 연결
+                      client = value;
+                    });
+          client.subscribe(topic, MqttQos.atLeastOnce);
         } else
           setState(() {
             print("패스워드 불일치");
