@@ -9,8 +9,8 @@ class MeditationSvgAssets {
 
   Map<AssetName, String> assets = {
     AssetName.search: "assets/icons/search.svg",
-    AssetName.vectorBottom: "assets/pics/Vector.svg",
-    AssetName.vectorTop: "assets/pics/Vector-1.svg",
+    AssetName.vectorBottom: "assets/icons/Vector.svg",
+    AssetName.vectorTop: "assets/icons/Vector-1.svg",
     AssetName.headphone: "assets/icons/headphone.svg",
     AssetName.tape: "assets/icons/tape.svg",
     AssetName.vectorSmallBottom: "assets/pics/VectorSmallBottom.svg",
@@ -20,7 +20,8 @@ class MeditationSvgAssets {
     AssetName.chart: "assets/icons/chart.svg",
     AssetName.discover: "assets/icons/discover.svg",
     AssetName.profile: "assets/icons/profile.svg",
-
+    AssetName.sensor: "assets/icons/cctv.svg",
+    //AssetName.cctv: "assets/icons/cctv1.png",
   };
 }
 
@@ -36,6 +37,7 @@ enum AssetName {
   heart,
   chart,
   discover,
-  profile
-
+  profile,
+  sensor,
+  //cctv,
 }
