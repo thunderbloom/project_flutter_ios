@@ -5,6 +5,11 @@ import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:project_flutter/mqtt/mqtt_client_widget.dart';
+import 'package:project_flutter/views/home_screen.dart';
+// import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Loding extends StatefulWidget {
@@ -21,6 +26,11 @@ class _LodingState extends State<Loding> {
   //-----------------------------------------------
   final GlobalController globalController =
       Get.put(GlobalController(), permanent: true);
+  //-----------------------------------------------
+  // late MqttClient client;
+  // var topic = "house/door";
+  
+
   //-----------------------------------------------
   final RxBool _isLoading = true.obs;
     //-------------------------------------
@@ -50,12 +60,15 @@ class _LodingState extends State<Loding> {
       _selectedIndex = index;
     });
   }
+  
+
+  
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Color(0xff1160aa)), //보류 (필요없을거같음)
       backgroundColor: Colors.white,
-
+      
       body: SafeArea(
         child: Obx(() => globalController.checkLoading().isTrue
             ? const Center(
@@ -93,7 +106,8 @@ class _LodingState extends State<Loding> {
                     SizedBox(height: 15),
                     InkWell(
                       onTap: () {
-                        print('기기등록');
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const MyMqttPage(title:'MQTT 통신')));
+                        // print('기기등록');
                       },
                       child: Container(
                         height: 200,
@@ -113,6 +127,7 @@ class _LodingState extends State<Loding> {
             ),
         ),
       ),
+      
       bottomNavigationBar: 
           BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -123,10 +138,12 @@ class _LodingState extends State<Loding> {
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: '알림',
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'My page',
+            
           ),
         ],
         currentIndex: _selectedIndex,

@@ -13,6 +13,10 @@ import 'package:project_flutter/pages/mysql.dart';
 import 'package:crypto/src/sha256.dart' as sha;
 import 'package:project_flutter/pages/main_page.dart';
 import 'package:project_flutter/views/home_screen.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
+
 
 void main() => runApp(LoginPage());
 
@@ -27,8 +31,15 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  
+  // late MqttClient client;
+  // var topic = "house/door";
 
   Future singIn() async {
+    // connect().then((value) {
+    //               client = value;
+    //             });
+    
     await db.getConnection().then((conn) async {
       await conn
           .query("SELECT Password FROM User WHERE ID = '${idController.text}'")
@@ -39,11 +50,24 @@ class _LoginPageState extends State<LoginPage> {
         passwordController.text.toString();
       });
     });
+    
   }
+
+
 
   Future<List<Profiles>> getSQLData() async {
     final List<Profiles> profileList = [];
     final Mysql db = Mysql();
+    late MqttClient client;
+    var topic = "house/door";
+    
+
+    await connect().then((value) {
+                      client = value;
+                    });
+    
+    await client.subscribe(topic, MqttQos.atLeastOnce);
+ 
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
       await conn
@@ -136,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
     final loginButton = Padding(
         padding: EdgeInsets.all(20.0),
         child: GestureDetector(
-          onTap: singIn,
+          onTap: singIn, 
           child: MaterialButton(
             minWidth: 200.0,
             height: 48.0,
@@ -288,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   ),
+                  //----------------------------
                   // SizedBox(width: 10.0),
                   // ElevatedButton(
                   //   style: ElevatedButton.styleFrom(
@@ -301,19 +326,19 @@ class _LoginPageState extends State<LoginPage> {
                   //     );
                   //   },
                   // ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('날씨'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
-                    },
-                  ),
+                  // SizedBox(width: 10.0),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Color(0xff1160aa),
+                  //       foregroundColor: Colors.white),
+                  //   child: Text('날씨'),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => HomeScreen()),
+                  //     );
+                  //   },
+                  // ),
                 ],
               )),
         ),
