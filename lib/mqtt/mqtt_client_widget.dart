@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
-import 'package:project_flutter/mqtt//mqtt_client_connect.dart';
+import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
+import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
 
 class MyMqttPage extends StatefulWidget {
   const MyMqttPage({Key? key, required this.title}) : super(key: key);

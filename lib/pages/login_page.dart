@@ -224,124 +224,125 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-  FutureBuilder<List> getDBdata() {
-    return FutureBuilder<List>(builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        return Text(snapshot.error.toString());
-      }
-      return MaterialApp(
-        title: 'Login',
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Container(
-              padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
-              child: Column(
-                children: <Widget>[
-                  Hero(
-                      tag: 'Hero',
-                      child: CircleAvatar(
-                        child: Image.asset('assets/images/temp_logo.jpg'),
-                        backgroundColor: Colors.transparent,
-                        radius: 58.0,
-                      )),
-                  SizedBox(height: 45.0),
-                  TextFormField(
-                    controller: idController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        hintText: '아이디', border: OutlineInputBorder()),
-                  ),
-                  SizedBox(height: 15.0),
-                  TextFormField(
-                    controller: passwordController,
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        hintText: '비밀번호', border: OutlineInputBorder()),
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('로그인'),
-                    onPressed: () {
-                      getSQLData();
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('회원가입'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Sign_up()),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('기기등록'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DevicePage()),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('회원정보'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserData()),
-                      );
-                    },
-                  ),
-                  //----------------------------
-                  // SizedBox(width: 10.0),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Color(0xff1160aa),
-                  //       foregroundColor: Colors.white),
-                  //   child: Text('디바이스정보'),
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => DeviceData()),
-                  //     );
-                  //   },
-                  // ),
-                  // SizedBox(width: 10.0),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Color(0xff1160aa),
-                  //       foregroundColor: Colors.white),
-                  //   child: Text('날씨'),
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => HomeScreen()),
-                  //     );
-                  //   },
-                  // ),
-                ],
-              )),
-        ),
-      );
-    });
-  }
+//---------------------------------------------------삭제--------------------
+  // FutureBuilder<List> getDBdata() {
+  //   return FutureBuilder<List>(builder: (context, snapshot) {
+  //     if (snapshot.connectionState == ConnectionState.waiting) {
+  //       return const CircularProgressIndicator();
+  //     } else if (snapshot.hasError) {
+  //       return Text(snapshot.error.toString());
+  //     }
+  //     return MaterialApp(
+  //       title: 'Login',
+  //       debugShowCheckedModeBanner: false,
+  //       home: Scaffold(
+  //         body: Container(
+  //             padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
+  //             child: Column(
+  //               children: <Widget>[
+  //                 Hero(
+  //                     tag: 'Hero',
+  //                     child: CircleAvatar(
+  //                       child: Image.asset('assets/images/temp_logo.jpg'),
+  //                       backgroundColor: Colors.transparent,
+  //                       radius: 58.0,
+  //                     )),
+  //                 SizedBox(height: 45.0),
+  //                 TextFormField(
+  //                   controller: idController,
+  //                   keyboardType: TextInputType.emailAddress,
+  //                   decoration: InputDecoration(
+  //                       hintText: '아이디', border: OutlineInputBorder()),
+  //                 ),
+  //                 SizedBox(height: 15.0),
+  //                 TextFormField(
+  //                   controller: passwordController,
+  //                   keyboardType: TextInputType.visiblePassword,
+  //                   obscureText: true,
+  //                   decoration: InputDecoration(
+  //                       hintText: '비밀번호', border: OutlineInputBorder()),
+  //                 ),
+  //                 SizedBox(width: 10.0),
+  //                 ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       backgroundColor: Color(0xff1160aa),
+  //                       foregroundColor: Colors.white),
+  //                   child: Text('로그인'),
+  //                   onPressed: () {
+  //                     getSQLData();
+  //                   },
+  //                 ),
+  //                 SizedBox(width: 10.0),
+  //                 ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       backgroundColor: Color(0xff1160aa),
+  //                       foregroundColor: Colors.white),
+  //                   child: Text('회원가입'),
+  //                   onPressed: () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(builder: (context) => Sign_up()),
+  //                     );
+  //                   },
+  //                 ),
+  //                 SizedBox(width: 10.0),
+  //                 ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       backgroundColor: Color(0xff1160aa),
+  //                       foregroundColor: Colors.white),
+  //                   child: Text('기기등록'),
+  //                   onPressed: () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(builder: (context) => DevicePage()),
+  //                     );
+  //                   },
+  //                 ),
+  //                 SizedBox(width: 10.0),
+  //                 ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       backgroundColor: Color(0xff1160aa),
+  //                       foregroundColor: Colors.white),
+  //                   child: Text('회원정보'),
+  //                   onPressed: () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(builder: (context) => UserData()),
+  //                     );
+  //                   },
+  //                 ),
+  //                 //----------------------------
+  //                 // SizedBox(width: 10.0),
+  //                 // ElevatedButton(
+  //                 //   style: ElevatedButton.styleFrom(
+  //                 //       backgroundColor: Color(0xff1160aa),
+  //                 //       foregroundColor: Colors.white),
+  //                 //   child: Text('디바이스정보'),
+  //                 //   onPressed: () {
+  //                 //     Navigator.push(
+  //                 //       context,
+  //                 //       MaterialPageRoute(builder: (context) => DeviceData()),
+  //                 //     );
+  //                 //   },
+  //                 // ),
+  //                 // SizedBox(width: 10.0),
+  //                 // ElevatedButton(
+  //                 //   style: ElevatedButton.styleFrom(
+  //                 //       backgroundColor: Color(0xff1160aa),
+  //                 //       foregroundColor: Colors.white),
+  //                 //   child: Text('날씨'),
+  //                 //   onPressed: () {
+  //                 //     Navigator.push(
+  //                 //       context,
+  //                 //       MaterialPageRoute(builder: (context) => HomeScreen()),
+  //                 //     );
+  //                 //   },
+  //                 // ),
+  //               ],
+  //             )),
+  //       ),
+  //     );
+  //     }
+  //   );
+  // }
 }

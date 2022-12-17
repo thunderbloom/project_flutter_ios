@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:project_flutter/pages/notification_service.dart';
 import 'dart:io';
 import 'package:get/get.dart';
+import 'dart:convert';
 
+
+import 'package:project_flutter/pages/mysql.dart';
 
 Future<MqttClient> connect() async {
   MqttServerClient client = 
+    // MqttServerClient.withPort('34.64.233.244', 'test999', 19883);
     MqttServerClient.withPort('34.64.233.244', 'ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f', 19883);
   client.logging(on : true);
   client.onConnected = onConnected;
@@ -21,7 +25,10 @@ Future<MqttClient> connect() async {
   client.onSubscribeFail = onSubscribeFail;
   client.pongCallback = pong;
   
+ 
+
   final connMess = MqttConnectMessage()
+      // .withClientIdentifier("test999")
       .withClientIdentifier("ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f")
       .authenticateAs("admin", "qwer123")
       // .keepAliveFor(60)
@@ -57,14 +64,23 @@ Future<MqttClient> connect() async {
 
     // client.update?.listen 이 callback 함수 역할을 함.
     client.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+      final recMess = c[0].payload as MqttPublishMessage;
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      var jsonPt = json.decode(pt);
+      // Map<String, dynamic> jsonPt = jsonDecode(pt);
+      final payloadmsg = jsonPt['status'];
+
       // final MqttMessage message = c[0].payload;
       // final payload = 
       //   MqttPublishPayload.bytesToStringAsString(message.toString()); //.payload.message;
       
       // print('Received message:$payload from topic: ${c[0].topic}>');
       NotificationService()
-      .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 움직임이 감지되었습니다',);
-
+      .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 $payloadmsg 되었습니다',);
+      // NotificationService()
+      // .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 움직임이 감지되었습니다',);
+      
       print('Received message: from topic: ${c[0].topic}>');  
     });
 
@@ -72,13 +88,14 @@ Future<MqttClient> connect() async {
       print('published');
       final payload =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
-
+      
       // NotificationService()
       // .showNotification(0, '새로운 알림이 있습니다', '${message.variableHeader?.topicName}에서 $payload.',);
-
+      // print(formatDate);
       print(        
         'Published message: $payload to topic: ${message.variableHeader?.topicName}'
       );
+      
     });
   } else {
     print(
@@ -94,8 +111,14 @@ Future<MqttClient> connect() async {
 
 
 void onMessage() { print('Message Arrived');}
-void onConnected() {  print('Connected');}
-void onDisconnected() { print('Disconneted');}
+void onConnected() {  
+  NotificationService()
+      .showNotification(0, '새로운 알림이 있습니다.', '서버와 연결되었습니다',);
+  print('Connected');}
+void onDisconnected() { 
+  NotificationService()
+      .showNotification(0, '새로운 알림이 있습니다.', '서버와 연결이 해제되었습니다',);
+  print('Disconneted');}
 void onSubscribed(String topic) { print('subscribed topic: $topic');}
 void onSubscribeFail(String topic) { print('Failed to subscribe: $topic');}
 void onUnsubscribed(String topic) { print('Unsubscribed topic: $topic');}
