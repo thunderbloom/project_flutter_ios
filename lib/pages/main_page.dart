@@ -4,6 +4,8 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/show_device_db.dart';
+import 'package:project_flutter/pages/show_video_db.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
 import 'package:project_flutter/pages/video_play.dart';
@@ -171,7 +173,7 @@ class _LodingState extends State<Loding> {
                                 ),
                                 SizedBox(width: 22),
                                 DiscoverCard(
-                                  onTap: adddevice,
+                                  onTap: adddevice1,
                                   title: "기기등록",
                                   subtitle: "+",
                                   gradientStartColor: Color(0xff441DFC),
@@ -188,7 +190,7 @@ class _LodingState extends State<Loding> {
                                 ),
                                 SizedBox(width: 22),
                                 DiscoverCard(
-                                  onTap: adddevice,
+                                  onTap: adddevice2,
                                   title: "기기등록",
                                   subtitle: "+",
                                   gradientStartColor: Color(0xff13DEA0),
@@ -265,11 +267,17 @@ class _LodingState extends State<Loding> {
   void sensor() {
     // Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
     Get.to(() => const HistoryData(), transition: Transition.rightToLeft);
-    
   }
 
   void cctv() {
     Get.to(() => VideoPlay(), transition: Transition.rightToLeft);
   }
-  void adddevice() {}
+
+  void adddevice1() {
+    Get.to(() => VideoData(), transition: Transition.rightToLeft);
+  }
+
+  void adddevice2() {
+    Get.to(() => DeviceData(), transition: Transition.rightToLeft);
+  }
 }
