@@ -100,11 +100,22 @@ class _LodingState extends State<Loding> {
                           SizedBox(
                             height: 15,
                           ),
+                          //-------------------
                           const HeaderWidget(),
-                          CurrentWeatherWidget(
-                            weatherDataCurrent: globalController
-                                .getWeatherData()
-                                .getCurrentWeather(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            },
+                            child: Container(
+                              child: CurrentWeatherWidget(
+                                weatherDataCurrent: globalController
+                                    .getWeatherData()
+                                    .getCurrentWeather(),
+                              ),
+                            ),
                           ),
                           SizedBox(height: 15),
                           Padding(
