@@ -31,3 +31,17 @@ class Devices {
     this.Device_Name
     });
 }
+
+class History {
+  String? serial_Number;
+  String? topic;
+  String? status;
+  String? Datetime;
+
+  History({
+    this.serial_Number,
+    this.topic, 
+    this.status, 
+    this.Datetime
+    });
+}

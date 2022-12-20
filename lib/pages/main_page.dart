@@ -6,9 +6,8 @@ import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:project_flutter/mqtt/mqtt_client_widget.dart';
+import 'package:project_flutter/pages/video_play.dart';
+
 import 'package:project_flutter/views/home_screen.dart';
 // import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +18,9 @@ import 'package:project_flutter/widgets/svg_asset.dart';
 import 'package:project_flutter/widgets/icons.dart';
 import 'package:badges/badges.dart';
 
-import 'package:project_flutter/views/home_screen.dart';
+import 'package:project_flutter/pages/show_history_db.dart';
+
+// import 'package:project_flutter/views/home_screen.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -137,7 +138,7 @@ class _LodingState extends State<Loding> {
                               children: [
                                 SizedBox(width: 15),
                                 DiscoverCard(
-                                  tag: "sensor",
+                                  // tag: "sensor",
                                   onTap: sensor,
                                   title: "sensor",
                                   subtitle: "정보를 확인하세요!",
@@ -262,9 +263,13 @@ class _LodingState extends State<Loding> {
   }
 
   void sensor() {
-    Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
+    // Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
+    Get.to(() => const HistoryData(), transition: Transition.rightToLeft);
+    
   }
 
-  void cctv() {}
+  void cctv() {
+    Get.to(() => VideoPlay(), transition: Transition.rightToLeft);
+  }
   void adddevice() {}
 }
