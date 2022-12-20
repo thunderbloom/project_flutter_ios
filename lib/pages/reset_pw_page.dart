@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_flutter/pages/data_table.dart';
+import 'package:project_flutter/userPreferences/data_table.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:project_flutter/pages/new_password_page.dart';
 
@@ -29,7 +29,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       String test2 = emailController.text.toString(); // email
 
       await conn
-          .query("SELECT Email FROM User WHERE ID = '${idController.text}'") // email 
+          .query(
+              "SELECT Email FROM User WHERE ID = '${idController.text}'") // email
           .then((result) {
         // email
         String pass = result.toString(); // email

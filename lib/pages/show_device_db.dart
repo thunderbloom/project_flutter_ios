@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:project_flutter/pages/mysql.dart';
-import 'package:project_flutter/pages/data_table.dart';
+import 'package:project_flutter/userPreferences/data_table.dart';
 
 class DeviceData extends StatefulWidget {
   const DeviceData({

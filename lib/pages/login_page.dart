@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:project_flutter/pages/data_table.dart';
+import 'package:get/get.dart';
+import 'package:project_flutter/userPreferences/data_table.dart';
 import 'package:project_flutter/pages/device_page.dart';
 import 'package:project_flutter/pages/reset_pw_page.dart';
 import 'package:project_flutter/pages/sign_up.dart';
@@ -12,9 +13,12 @@ import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:crypto/src/sha256.dart' as sha;
 import 'package:project_flutter/pages/main_page.dart';
+import 'package:project_flutter/pages/signup_after.dart';
 import 'package:project_flutter/views/home_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(LoginPage());
+void main() => runApp(Signup_after());
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,19 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future singIn() async {
-    await db.getConnection().then((conn) async {
-      await conn
-          .query("SELECT Password FROM User WHERE ID = '${idController.text}'")
-          .then((password) {
-        id:
-        idController.text.toString();
-        password:
-        passwordController.text.toString();
-      });
-    });
-  }
-
   Future<List<Profiles>> getSQLData() async {
     final List<Profiles> profileList = [];
     final Mysql db = Mysql();
@@ -53,12 +44,13 @@ class _LoginPageState extends State<LoginPage> {
         String test_pass = passwordController.text.toString();
         String pw = pass.substring(20, pass.length - 2); // db에 저장된 비밀번호
 
-        Digest decrpyted_password = decrypt(); //추가
+        Digest decrpyted_password = decrypt();
 
-        String pass_decrypt = decrpyted_password.toString(); // 추가
+        String pass_decrypt = decrpyted_password.toString();
 
         if (pw == pass_decrypt) {
           print("패스워드 일치");
+
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
         } else
@@ -102,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final id = TextFormField(
       controller: idController,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
           hintText: '아이디',
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -136,12 +128,14 @@ class _LoginPageState extends State<LoginPage> {
     final loginButton = Padding(
         padding: EdgeInsets.all(20.0),
         child: GestureDetector(
-          onTap: singIn,
           child: MaterialButton(
             minWidth: 200.0,
             height: 48.0,
-            onPressed: () {
+            onPressed: () async {
               getSQLData();
+              SharedPreferences sp =
+                  await SharedPreferences.getInstance(); // 추가
+              await sp.setString('password', 'pw'); // 추가
             },
             color: Color(0xff11600aa),
             child: Text('로그인', style: TextStyle(color: Colors.white)),
@@ -159,10 +153,12 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Sign_up()));
             }),
-        TextButton( 
+        TextButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ForgotPasswordPage()));
             },
             child: Text('비밀번호 찾기',
                 style: TextStyle(color: Color.fromARGB(214, 0, 0, 0))))
@@ -195,129 +191,13 @@ class _LoginPageState extends State<LoginPage> {
               height: 24.0,
             ),
             loginButton,
+            SizedBox(
+              height: 8.0,
+            ),
             findPW,
           ],
         ),
       ),
     );
-  }
-
-  FutureBuilder<List> getDBdata() {
-    return FutureBuilder<List>(builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      } else if (snapshot.hasError) {
-        return Text(snapshot.error.toString());
-      }
-      return MaterialApp(
-        title: 'Login',
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Container(
-              padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
-              child: Column(
-                children: <Widget>[
-                  Hero(
-                      tag: 'Hero',
-                      child: CircleAvatar(
-                        child: Image.asset('assets/images/temp_logo.jpg'),
-                        backgroundColor: Colors.transparent,
-                        radius: 58.0,
-                      )),
-                  SizedBox(height: 45.0),
-                  TextFormField(
-                    controller: idController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        hintText: '아이디', border: OutlineInputBorder()),
-                  ),
-                  SizedBox(height: 15.0),
-                  TextFormField(
-                    controller: passwordController,
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        hintText: '비밀번호', border: OutlineInputBorder()),
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('로그인'),
-                    onPressed: () {
-                      getSQLData();
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('회원가입'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Sign_up()),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('기기등록'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DevicePage()),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('회원정보'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserData()),
-                      );
-                    },
-                  ),
-                  // SizedBox(width: 10.0),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Color(0xff1160aa),
-                  //       foregroundColor: Colors.white),
-                  //   child: Text('디바이스정보'),
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => DeviceData()),
-                  //     );
-                  //   },
-                  // ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1160aa),
-                        foregroundColor: Colors.white),
-                    child: Text('날씨'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
-                    },
-                  ),
-                ],
-              )),
-        ),
-      );
-    });
   }
 }

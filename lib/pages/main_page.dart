@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class Loding extends StatefulWidget {
 class _LodingState extends State<Loding> {
   int _selectedIndex = 0;
   int pageIndex = 0;
+  String id = "";
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   //-----------------------------------------------
@@ -23,7 +26,7 @@ class _LodingState extends State<Loding> {
       Get.put(GlobalController(), permanent: true);
   //-----------------------------------------------
   final RxBool _isLoading = true.obs;
-    //-------------------------------------
+  //-------------------------------------
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 0: Menu',
@@ -38,6 +41,7 @@ class _LodingState extends State<Loding> {
       style: optionStyle,
     ),
   ];
+
   List<Widget> _demo = [
     Container(height: 300, color: Colors.amber),
     Container(height: 300, color: Colors.black),
@@ -57,65 +61,63 @@ class _LodingState extends State<Loding> {
       backgroundColor: Colors.white,
 
       body: SafeArea(
-        child: Obx(() => globalController.checkLoading().isTrue
-            ? const Center(
-                child: CircularProgressIndicator(),
-                            
+        child: Obx(
+          () => globalController.checkLoading().isTrue
+              ? const Center(
+                  child: CircularProgressIndicator(),
                 )
-                
-      //--------------------------------
-            :Center(
-              child: ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                  children: <Widget>[
-                    CarouselIndicator(
-                      count: _demo.length,
-                      index: pageIndex,
-                    ),
-                    Text(
-                        textAlign: TextAlign.center,
-                        '우리집 수호천사',
-                        style: TextStyle(
-                            color: Color(0xff1160aa),
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    const HeaderWidget(),
-                          CurrentWeatherWidget(
-                            weatherDataCurrent:
-                                globalController.getWeatherData().getCurrentWeather(),
-                          ),
-                    
-                    SizedBox(height: 15),
-                    InkWell(
-                      onTap: () {
-                        print('기기등록');
-                      },
-                      child: Container(
-                        height: 200,
-                        width: double.infinity,
-                        child: PageView(
-                          children: _demo,
-                          onPageChanged: (index) {
-                            setState(() {
-                              pageIndex = index;
-                            });
-                          },
+
+              //--------------------------------
+              : Center(
+                  child: ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                      children: <Widget>[
+                        CarouselIndicator(
+                          count: _demo.length,
+                          index: pageIndex,
                         ),
-                      ),
-                    )
-                    
-                  ]),
-            ),
+                        Text(
+                            textAlign: TextAlign.center,
+                            '우리집 수호천사',
+                            style: TextStyle(
+                                color: Color(0xff1160aa),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        const HeaderWidget(),
+                        CurrentWeatherWidget(
+                          weatherDataCurrent: globalController
+                              .getWeatherData()
+                              .getCurrentWeather(),
+                        ),
+                        SizedBox(height: 15),
+                        InkWell(
+                          onTap: () {
+                            print('기기등록');
+                          },
+                          child: Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: PageView(
+                              children: _demo,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  pageIndex = index;
+                                });
+                              },
+                            ),
+                          ),
+                        )
+                      ]),
+                ),
         ),
       ),
-      bottomNavigationBar: 
-          BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.menu),
             label: 'Menu',

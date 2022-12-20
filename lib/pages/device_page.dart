@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_flutter/pages/data_table.dart';
+import 'package:project_flutter/userPreferences/data_table.dart';
 import 'package:project_flutter/pages/mysql.dart';
 
 void main() => runApp(DevicePage());
