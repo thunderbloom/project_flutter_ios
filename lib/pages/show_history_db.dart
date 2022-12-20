@@ -41,6 +41,7 @@ class _HistoryDataState extends State<HistoryData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("History")),
       body: Center(
         child: getDBData(),
       ),
@@ -63,7 +64,7 @@ class _HistoryDataState extends State<HistoryData> {
               return ListTile(
                 leading: Text(
                   data[index].topic.toString(),
-                  style: const TextStyle(fontSize: 25),
+                  style: const TextStyle(fontSize: 20),
                 ),
                 title: Text(
                   data[index].status.toString(),
