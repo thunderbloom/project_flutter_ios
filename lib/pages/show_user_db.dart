@@ -19,11 +19,11 @@ class _UserDataState extends State<UserData> {
     await db.getConnection().then((conn) async {
       String sqlQuery =
           //'select ID, password, name, phonenumber, address, email from User';
-          'select ID, password, email from User';
+          'select user_id, password, email from User';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final profileModel = Profiles(
-              ID: res["ID"],
+              user_id: res["user_id"],
               password: res["password"],
               //name: res["name"],
               //phonenumber: res["phonenumber"],
@@ -63,7 +63,7 @@ class _UserDataState extends State<UserData> {
               final data = snapshot.data as List;
               return ListTile(
                 leading: Text(
-                  data[index].ID.toString(),
+                  data[index].user_id.toString(),
                   style: const TextStyle(fontSize: 25),
                 ),
                 title: Text(

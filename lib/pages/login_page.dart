@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
     await db.getConnection().then((conn) async {
       await conn
-          .query("SELECT Password FROM User WHERE ID = '${idController.text}'")
+          .query("SELECT Password FROM User WHERE user_id = '${idController.text}'")
           .then((password) {
         id:
         idController.text.toString();
@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
       await conn
-          .query("SELECT Password FROM User WHERE ID = '${idController.text}'")
+          .query("SELECT Password FROM User WHERE user_id = '${idController.text}'")
           .then((result) {
         String pass = result.toString();
         String test_pass = passwordController.text.toString();

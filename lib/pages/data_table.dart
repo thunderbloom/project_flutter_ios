@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 class Profiles {
-  String? ID;
+  String? user_id;
   String? password;
   String? name;
   String? phonenumber;
@@ -11,7 +11,7 @@ class Profiles {
   String? email;
 
   Profiles(
-      {this.ID,
+      {this.user_id,
       this.password,
       this.name,
       this.phonenumber,
@@ -20,35 +20,30 @@ class Profiles {
 }
 
 class Devices {
-  String? id;
-  String? Serial_Number;
-  String? Model_Name;
-  String? Device_Name;
+  String? user_id;
+  String? serial_number;
+  String? device_name;
 
-  Devices({this.id, this.Serial_Number, this.Model_Name, this.Device_Name});
+  Devices({this.user_id, this.serial_number, this.device_name});
 }
 
 class History {
-  String? serial_Number;
-  String? topic;
+  String? user_id;
+  String? sensor;
   String? status;
-  String? Datetime;
+  DateTime? datetime;
 
-  History({this.serial_Number, this.topic, this.status, this.Datetime});
+  History({this.user_id, this.sensor, this.status, this.datetime});
 }
 
 class Video {
-  //Int? id;
-  String? serial_number;
+  String? user_id;
   String? video_path;
   String? file_name;
-  DateTime? Datetime;
 
   Video({
-    //this.id,
-    this.serial_number,
+    this.user_id,
     this.video_path,
     this.file_name,
-    this.Datetime,
   });
 }

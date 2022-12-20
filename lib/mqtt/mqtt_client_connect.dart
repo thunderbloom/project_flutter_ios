@@ -52,15 +52,16 @@ Future<MqttClient> connect() async {
     const topic = 'house/door';
     
     // client.subscribe(topic, MqttQos.atLeastOnce);
-    client.subscribe('house/door', MqttQos.atLeastOnce);
-    client.subscribe('house/door1', MqttQos.atLeastOnce);
-    client.subscribe('house/door2', MqttQos.atLeastOnce);
-    client.subscribe('house/window', MqttQos.atLeastOnce);
-    client.subscribe('house/window1', MqttQos.atLeastOnce);
-    client.subscribe('house/window2', MqttQos.atLeastOnce);
-    client.subscribe('house/camera', MqttQos.atLeastOnce);
-    client.subscribe('house/camera1', MqttQos.atLeastOnce);
-    client.subscribe('house/camera2', MqttQos.atLeastOnce);
+    client.subscribe('test9999', MqttQos.atLeastOnce);
+    // client.subscribe('house/door', MqttQos.atLeastOnce);
+    // client.subscribe('house/door1', MqttQos.atLeastOnce);
+    // client.subscribe('house/door2', MqttQos.atLeastOnce);
+    // client.subscribe('house/window', MqttQos.atLeastOnce);
+    // client.subscribe('house/window1', MqttQos.atLeastOnce);
+    // client.subscribe('house/window2', MqttQos.atLeastOnce);
+    // client.subscribe('house/camera', MqttQos.atLeastOnce);
+    // client.subscribe('house/camera1', MqttQos.atLeastOnce);
+    // client.subscribe('house/camera2', MqttQos.atLeastOnce);
 
     // client.update?.listen 이 callback 함수 역할을 함.
     client.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
@@ -69,15 +70,17 @@ Future<MqttClient> connect() async {
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       var jsonPt = json.decode(pt);
       // Map<String, dynamic> jsonPt = jsonDecode(pt);
-      final payloadmsg = jsonPt['status'];
-
+      final sensor = jsonPt["sensor"];
+      final status = jsonPt["status"];
+      // print(payloadmsg);
       // final MqttMessage message = c[0].payload;
       // final payload = 
       //   MqttPublishPayload.bytesToStringAsString(message.toString()); //.payload.message;
       
       // print('Received message:$payload from topic: ${c[0].topic}>');
       NotificationService()
-      .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 $payloadmsg 되었습니다',);
+      .showNotification(0, '새로운 알림이 있습니다.', '$sensor에서 $status 되었습니다',);
+      // .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 $status 되었습니다',);
       // NotificationService()
       // .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 움직임이 감지되었습니다',);
       
