@@ -18,14 +18,13 @@ class _HistoryDataState extends State<HistoryData> {
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
       String sqlQuery =
-          'select topic, status, Datetime from History';
+          'select sensor, status, datetime from History order by datetime DESC';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final historyModel = History(
-            
-            topic: res["topic"],
+            sensor: res["sensor"],
             status: res["status"],
-            Datetime: res["Datetime"],
+            datetime: res["datetime"],
           );
           historyList.add(historyModel);
         }
@@ -63,7 +62,7 @@ class _HistoryDataState extends State<HistoryData> {
               final data = snapshot.data as List;
               return ListTile(
                 leading: Text(
-                  data[index].topic.toString(),
+                  data[index].sensor.toString(),
                   style: const TextStyle(fontSize: 20),
                 ),
                 title: Text(
@@ -74,7 +73,7 @@ class _HistoryDataState extends State<HistoryData> {
                   ),
                 ),
                 subtitle: Text(
-                  data[index].Datetime.toString(),
+                  data[index].datetime.toString(),
                   style: const TextStyle(fontSize: 20),
                 ),
                 
