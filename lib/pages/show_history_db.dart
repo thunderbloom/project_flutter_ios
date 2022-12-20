@@ -18,7 +18,7 @@ class _HistoryDataState extends State<HistoryData> {
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
       String sqlQuery =
-          'topic, status, Datetime';
+          'select topic, status, Datetime from History';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final historyModel = History(
