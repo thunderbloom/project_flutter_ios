@@ -18,7 +18,7 @@ class _VideoPlayState extends State<VideoPlay> {
     final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery = 'select file_name from Video';
+      String sqlQuery = 'select file_name from Video order by file_name DESC';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final videoModel = Video(
@@ -48,7 +48,8 @@ class _VideoPlayState extends State<VideoPlay> {
 
   loadVideoPlayer() {
     controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
+        'http://34.64.233.244:9898/download/video2022-12-21_10-24-08-503542.mp4');
+        // 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
     controller.addListener(() {
       setState(() {});
     });
@@ -61,7 +62,7 @@ class _VideoPlayState extends State<VideoPlay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Play Video from Assets/URL"),
+        title: Text("Video History"),
         backgroundColor: Color(0xff1160aa),
       ),
       body: Container(
@@ -131,7 +132,7 @@ class _VideoPlayState extends State<VideoPlay> {
         Container(
             child: SizedBox(
           child: getDBData(),
-          height: 50,
+          height: 300,
         )),
       ])),
     );

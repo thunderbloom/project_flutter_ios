@@ -18,7 +18,7 @@ Future<MqttClient> connect() async {
   client.onConnected = onConnected;
   
   client.onDisconnected =  onDisconnected;
-  client.keepAlivePeriod = 20;
+  client.keepAlivePeriod =  65535;
   // client.onUnsubscribed = onUnsubscribed;
   
   client.port = 19883;
