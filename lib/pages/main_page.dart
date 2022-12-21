@@ -4,6 +4,8 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/show_device_db.dart';
+import 'package:project_flutter/pages/show_video_db.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
 import 'package:project_flutter/pages/video_play.dart';
@@ -49,20 +51,20 @@ class _LodingState extends State<Loding> {
   //-----------------------------------------------
   final RxBool _isLoading = true.obs;
   //-------------------------------------
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Menu',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: 알림',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: My page',
-      style: optionStyle,
-    ),
-  ];
+  //static const List<Widget> _widgetOptions = <Widget>[
+  //  Text(
+  //    'Index 0: Menu',
+  //    style: optionStyle,
+  //  ),
+  //  Text(
+  //    'Index 1: 알림',
+  //    style: optionStyle,
+  //  ),
+  //  Text(
+  //    'Index 2: My page',
+  //    style: optionStyle,
+  //  ),
+  //];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -101,11 +103,22 @@ class _LodingState extends State<Loding> {
                           SizedBox(
                             height: 15,
                           ),
+                          //-------------------
                           const HeaderWidget(),
-                          CurrentWeatherWidget(
-                            weatherDataCurrent: globalController
-                                .getWeatherData()
-                                .getCurrentWeather(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            },
+                            child: Container(
+                              child: CurrentWeatherWidget(
+                                weatherDataCurrent: globalController
+                                    .getWeatherData()
+                                    .getCurrentWeather(),
+                              ),
+                            ),
                           ),
                           SizedBox(height: 15),
                           Padding(
@@ -160,7 +173,7 @@ class _LodingState extends State<Loding> {
                                 ),
                                 SizedBox(width: 22),
                                 DiscoverCard(
-                                  onTap: adddevice,
+                                  onTap: adddevice1,
                                   title: "기기등록",
                                   subtitle: "+",
                                   gradientStartColor: Color(0xff441DFC),
@@ -177,7 +190,7 @@ class _LodingState extends State<Loding> {
                                 ),
                                 SizedBox(width: 22),
                                 DiscoverCard(
-                                  onTap: adddevice,
+                                  onTap: adddevice2,
                                   title: "기기등록",
                                   subtitle: "+",
                                   gradientStartColor: Color(0xff13DEA0),
@@ -254,11 +267,17 @@ class _LodingState extends State<Loding> {
   void sensor() {
     // Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
     Get.to(() => const HistoryData(), transition: Transition.rightToLeft);
-    
   }
 
   void cctv() {
     Get.to(() => VideoPlay(), transition: Transition.rightToLeft);
   }
-  void adddevice() {}
+
+  void adddevice1() {
+    Get.to(() => VideoData(), transition: Transition.rightToLeft);
+  }
+
+  void adddevice2() {
+    Get.to(() => DeviceData(), transition: Transition.rightToLeft);
+  }
 }

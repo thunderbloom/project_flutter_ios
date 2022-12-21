@@ -3,31 +3,29 @@ import 'package:mysql1/mysql1.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:project_flutter/pages/data_table.dart';
 
-class DeviceData extends StatefulWidget {
-  const DeviceData({
+class VideoData extends StatefulWidget {
+  const VideoData({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DeviceData> createState() => _DeviceDataState();
+  State<VideoData> createState() => _VideoDataState();
 }
 
-class _DeviceDataState extends State<DeviceData> {
-  Future<List<Devices>> getSQLData() async {
-    final List<Devices> deviceList = [];
+class _VideoDataState extends State<VideoData> {
+  Future<List<Video>> getSQLData() async {
+    final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery =
-          'select user_id, serial_number, device_Name from Device';
+      String sqlQuery = 'select file_name, Datetime from Video';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
-          final deviceModel = Devices(
-            user_id: res["user_id"],
-            serial_number: res["serial_number"],
-            device_name: res["device_name"],
-            //Device_Name: res["Device_Name"],
+          final videoModel = Video(
+            // id: res["id"],
+            file_name: res["file_name"],
+            // Datetime: res["Datetime"],
           );
-          deviceList.add(deviceModel);
+          videoList.add(videoModel);
         }
       }).onError((error, stackTrace) {
         print(error);
@@ -35,15 +33,16 @@ class _DeviceDataState extends State<DeviceData> {
       });
       conn.close();
     });
-    return deviceList;
+    return videoList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Device')),
+      appBar: AppBar(title: Text("video")),
       body: Center(
         child: getDBData(),
+        //
       ),
     );
   }
@@ -63,20 +62,21 @@ class _DeviceDataState extends State<DeviceData> {
               final data = snapshot.data as List;
               return ListTile(
                 leading: Text(
-                  data[index].user_id.toString(),
-                  style: const TextStyle(fontSize: 25),
-                ),
-                title: Text(
-                  data[index].serial_Number.toString(),
+                  data[index].file_name.toString(),
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(
-                  data[index].device_name.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
+                //title: Text(
+                //  data[index].Datetime.toString(),
+                //  style: const TextStyle(
+                //    fontSize: 20,
+                //    fontWeight: FontWeight.bold,
+                //  ),
+                //),
+                //subtitle: Text(
+                //  data[index].Datetime.toString(),
+                //  style: const TextStyle(fontSize: 20),
+                //),
               );
             },
           );
