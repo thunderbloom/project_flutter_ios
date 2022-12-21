@@ -18,7 +18,7 @@ class _HistoryDataState extends State<HistoryData> {
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
       String sqlQuery =
-          'select sensor, status, datetime from History order by datetime DESC';
+          'select sensor, status, datetime from History where user_id="test9999" order by datetime DESC';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final historyModel = History(
