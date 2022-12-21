@@ -18,13 +18,13 @@ class _VideoPlayState extends State<VideoPlay> {
     final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery = 'select file_name, Datetime from video';
+      String sqlQuery = 'select file_name from Video';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final videoModel = Video(
             // id: res["id"],
             file_name: res["file_name"],
-            Datetime: res["Datetime"],
+            // Datetime: res["Datetime"],
           );
           videoList.add(videoModel);
         }
@@ -157,13 +157,13 @@ class _VideoPlayState extends State<VideoPlay> {
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                title: Text(
-                  data[index].Datetime.toString(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                //title: Text(
+                //  data[index].Datetime.toString(),
+                //  style: const TextStyle(
+                //    fontSize: 20,
+                //    fontWeight: FontWeight.bold,
+                //  ),
+                //),
                 //subtitle: Text(
                 //  data[index].Datetime.toString(),
                 //  style: const TextStyle(fontSize: 20),
