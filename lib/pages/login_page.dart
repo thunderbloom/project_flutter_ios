@@ -12,11 +12,12 @@ import 'package:project_flutter/pages/show_user_db.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:crypto/src/sha256.dart' as sha;
 import 'package:project_flutter/pages/main_page.dart';
+import 'package:project_flutter/pages/sign_up.dart';
 import 'package:project_flutter/views/home_screen.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(LoginPage());
 
@@ -31,21 +32,19 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  
 
-
-  Future singIn() async {
-
+  Future signIn() async {
     await db.getConnection().then((conn) async {
       await conn
-          .query("SELECT Password FROM User WHERE user_id = '${idController.text}'")
+          .query(
+              "SELECT password FROM User WHERE user_id = '${idController.text}'")
           .then((password) {
         id:
         idController.text.toString();
         password:
         passwordController.text.toString();
       });
-    });   
+    });
   }
 
   Future<List<Profiles>> getSQLData() async {
@@ -57,13 +56,14 @@ class _LoginPageState extends State<LoginPage> {
     // await connect().then((value) {
     //                   client = value;
     //                 });
-    
+
     // await client.subscribe(topic, MqttQos.atLeastOnce);
- 
+
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
       await conn
-          .query("SELECT Password FROM User WHERE user_id = '${idController.text}'")
+          .query(
+              "SELECT Password FROM User WHERE user_id = '${idController.text}'")
           .then((result) {
         String pass = result.toString();
         String test_pass = passwordController.text.toString();
@@ -77,10 +77,11 @@ class _LoginPageState extends State<LoginPage> {
           print("패스워드 일치");
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
-          
-          connect().then((value) {  // ------------------------MQTT 연결
-                      client = value;
-                    });
+
+          connect().then((value) {
+            // ------------------------MQTT 연결
+            client = value;
+          });
           client.subscribe(topic, MqttQos.atLeastOnce);
         } else
           setState(() {
@@ -116,9 +117,9 @@ class _LoginPageState extends State<LoginPage> {
     final logo = Hero(
         tag: 'home',
         child: CircleAvatar(
-          backgroundColor: Colors.blueAccent,
-          radius: 48.0,
-          child: Image.asset('assets/images/temp_logo.jpg'),
+          backgroundColor: Colors.white,
+          radius: 90.0,
+          child: Image.asset('assets/images/logo.png'),
         ));
 
     final id = TextFormField(
@@ -129,9 +130,11 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return '아이디를 입력해주세요.';
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '아이디를 확인해주세요!';
+        } else if (value.length < 4) {
+          return '글자수가 너무 적습니다. 4자리 이상 아이디를 입력하세요.';
         }
         return null;
       },
@@ -140,15 +143,18 @@ class _LoginPageState extends State<LoginPage> {
     final password = TextFormField(
       controller: passwordController,
       keyboardType: TextInputType.visiblePassword,
+      obscuringCharacter: "*",
       obscureText: true,
       decoration: InputDecoration(
           hintText: '비밀번호',
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return '비밀번호를 입력해주세요.';
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '비밀번호를 입력해주세요';
+        } else if (value.length < 8) {
+          return '8자 이상 입력하세요';
         }
         return null;
       },
@@ -157,12 +163,16 @@ class _LoginPageState extends State<LoginPage> {
     final loginButton = Padding(
         padding: EdgeInsets.all(20.0),
         child: GestureDetector(
-          onTap: singIn, 
+          onTap: signIn,
           child: MaterialButton(
             minWidth: 200.0,
             height: 48.0,
-            onPressed: () {
-              getSQLData();
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setBool('isLoggedIn', true);
+                getSQLData();
+              }
             },
             color: Color(0xff11600aa),
             child: Text('로그인', style: TextStyle(color: Colors.white)),
@@ -178,7 +188,11 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(color: Color.fromARGB(214, 0, 0, 0))),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Sign_up()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Sign_up(
+                            title: 'sign up',
+                          )));
             }),
         TextButton(
             onPressed: () {
@@ -192,157 +206,33 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-          children: <Widget>[
-            logo,
-            SizedBox(height: 24.0),
-            Text('우리집 수호 천사',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold)),
-            SizedBox(
-              height: 24.0,
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              children: <Widget>[
+                logo,
+                SizedBox(height: 24.0),
+                SizedBox(
+                  height: 24.0,
+                ),
+                id,
+                SizedBox(
+                  height: 8.0,
+                ),
+                password,
+                SizedBox(
+                  height: 24.0,
+                ),
+                loginButton,
+                findPW,
+              ],
             ),
-            id,
-            SizedBox(
-              height: 8.0,
-            ),
-            password,
-            SizedBox(
-              height: 24.0,
-            ),
-            loginButton,
-            findPW,
-          ],
-        ),
-      ),
+          ),
+        )
     );
   }
-//---------------------------------------------------삭제--------------------
-  // FutureBuilder<List> getDBdata() {
-  //   return FutureBuilder<List>(builder: (context, snapshot) {
-  //     if (snapshot.connectionState == ConnectionState.waiting) {
-  //       return const CircularProgressIndicator();
-  //     } else if (snapshot.hasError) {
-  //       return Text(snapshot.error.toString());
-  //     }
-  //     return MaterialApp(
-  //       title: 'Login',
-  //       debugShowCheckedModeBanner: false,
-  //       home: Scaffold(
-  //         body: Container(
-  //             padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
-  //             child: Column(
-  //               children: <Widget>[
-  //                 Hero(
-  //                     tag: 'Hero',
-  //                     child: CircleAvatar(
-  //                       child: Image.asset('assets/images/temp_logo.jpg'),
-  //                       backgroundColor: Colors.transparent,
-  //                       radius: 58.0,
-  //                     )),
-  //                 SizedBox(height: 45.0),
-  //                 TextFormField(
-  //                   controller: idController,
-  //                   keyboardType: TextInputType.emailAddress,
-  //                   decoration: InputDecoration(
-  //                       hintText: '아이디', border: OutlineInputBorder()),
-  //                 ),
-  //                 SizedBox(height: 15.0),
-  //                 TextFormField(
-  //                   controller: passwordController,
-  //                   keyboardType: TextInputType.visiblePassword,
-  //                   obscureText: true,
-  //                   decoration: InputDecoration(
-  //                       hintText: '비밀번호', border: OutlineInputBorder()),
-  //                 ),
-  //                 SizedBox(width: 10.0),
-  //                 ElevatedButton(
-  //                   style: ElevatedButton.styleFrom(
-  //                       backgroundColor: Color(0xff1160aa),
-  //                       foregroundColor: Colors.white),
-  //                   child: Text('로그인'),
-  //                   onPressed: () {
-  //                     getSQLData();
-  //                   },
-  //                 ),
-  //                 SizedBox(width: 10.0),
-  //                 ElevatedButton(
-  //                   style: ElevatedButton.styleFrom(
-  //                       backgroundColor: Color(0xff1160aa),
-  //                       foregroundColor: Colors.white),
-  //                   child: Text('회원가입'),
-  //                   onPressed: () {
-  //                     Navigator.push(
-  //                       context,
-  //                       MaterialPageRoute(builder: (context) => Sign_up()),
-  //                     );
-  //                   },
-  //                 ),
-  //                 SizedBox(width: 10.0),
-  //                 ElevatedButton(
-  //                   style: ElevatedButton.styleFrom(
-  //                       backgroundColor: Color(0xff1160aa),
-  //                       foregroundColor: Colors.white),
-  //                   child: Text('기기등록'),
-  //                   onPressed: () {
-  //                     Navigator.push(
-  //                       context,
-  //                       MaterialPageRoute(builder: (context) => DevicePage()),
-  //                     );
-  //                   },
-  //                 ),
-  //                 SizedBox(width: 10.0),
-  //                 ElevatedButton(
-  //                   style: ElevatedButton.styleFrom(
-  //                       backgroundColor: Color(0xff1160aa),
-  //                       foregroundColor: Colors.white),
-  //                   child: Text('회원정보'),
-  //                   onPressed: () {
-  //                     Navigator.push(
-  //                       context,
-  //                       MaterialPageRoute(builder: (context) => UserData()),
-  //                     );
-  //                   },
-  //                 ),
-  //                 //----------------------------
-  //                 // SizedBox(width: 10.0),
-  //                 // ElevatedButton(
-  //                 //   style: ElevatedButton.styleFrom(
-  //                 //       backgroundColor: Color(0xff1160aa),
-  //                 //       foregroundColor: Colors.white),
-  //                 //   child: Text('디바이스정보'),
-  //                 //   onPressed: () {
-  //                 //     Navigator.push(
-  //                 //       context,
-  //                 //       MaterialPageRoute(builder: (context) => DeviceData()),
-  //                 //     );
-  //                 //   },
-  //                 // ),
-  //                 // SizedBox(width: 10.0),
-  //                 // ElevatedButton(
-  //                 //   style: ElevatedButton.styleFrom(
-  //                 //       backgroundColor: Color(0xff1160aa),
-  //                 //       foregroundColor: Colors.white),
-  //                 //   child: Text('날씨'),
-  //                 //   onPressed: () {
-  //                 //     Navigator.push(
-  //                 //       context,
-  //                 //       MaterialPageRoute(builder: (context) => HomeScreen()),
-  //                 //     );
-  //                 //   },
-  //                 // ),
-  //               ],
-  //             )),
-  //       ),
-  //     );
-  //     }
-  //   );
-  // }
 }

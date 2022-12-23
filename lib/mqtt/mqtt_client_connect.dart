@@ -7,29 +7,30 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'dart:convert';
 
-
 import 'package:project_flutter/pages/mysql.dart';
 
 Future<MqttClient> connect() async {
-  MqttServerClient client = 
-    // MqttServerClient.withPort('34.64.233.244', 'test999', 19883);
-    MqttServerClient.withPort('34.64.233.244', 'ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f', 19883);
-  client.logging(on : true);
+  MqttServerClient client =
+      // MqttServerClient.withPort('34.64.233.244', 'test999', 19883);
+      MqttServerClient.withPort(
+          '34.64.233.244',
+          'ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f',
+          19883);
+  client.logging(on: true);
   client.onConnected = onConnected;
-  
-  client.onDisconnected =  onDisconnected;
+
+  client.onDisconnected = onDisconnected;
   client.keepAlivePeriod = 20;
   // client.onUnsubscribed = onUnsubscribed;
-  
+
   client.port = 19883;
   client.onSubscribeFail = onSubscribeFail;
   client.pongCallback = pong;
-  
- 
 
   final connMess = MqttConnectMessage()
       // .withClientIdentifier("test999")
-      .withClientIdentifier("ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f")
+      .withClientIdentifier(
+          "ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f")
       .authenticateAs("admin", "qwer123")
       // .keepAliveFor(60)
       .withWillTopic('willtopic')
@@ -50,7 +51,7 @@ Future<MqttClient> connect() async {
     print('EMQX client connected');
     print("접속완료");
     const topic = 'house/door';
-    
+
     // client.subscribe(topic, MqttQos.atLeastOnce);
     client.subscribe('test9999', MqttQos.atLeastOnce);
     // client.subscribe('house/door', MqttQos.atLeastOnce);
@@ -74,55 +75,77 @@ Future<MqttClient> connect() async {
       final status = jsonPt["status"];
       // print(payloadmsg);
       // final MqttMessage message = c[0].payload;
-      // final payload = 
+      // final payload =
       //   MqttPublishPayload.bytesToStringAsString(message.toString()); //.payload.message;
-      
+      final sensor2 = "도어 센서";
+      final status2 = "문 열림";
       // print('Received message:$payload from topic: ${c[0].topic}>');
-      NotificationService()
-      .showNotification(0, '새로운 알림이 있습니다.', '$sensor에서 $status 되었습니다',);
+      NotificationService().showNotification(
+        0,
+        '새로운 알림이 있습니다.',
+        '$sensor2에서 $status2이 감지되었습니다',
+      );
       // .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 $status 되었습니다',);
       // NotificationService()
       // .showNotification(0, '새로운 알림이 있습니다.', '${c[0].topic}에서 움직임이 감지되었습니다',);
-      
-      print('Received message: from topic: ${c[0].topic}>');  
+
+      print('Received message: from topic: ${c[0].topic}>');
     });
 
     client.published?.listen((MqttPublishMessage message) {
       print('published');
       final payload =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
-      
+
       // NotificationService()
       // .showNotification(0, '새로운 알림이 있습니다', '${message.variableHeader?.topicName}에서 $payload.',);
       // print(formatDate);
-      print(        
-        'Published message: $payload to topic: ${message.variableHeader?.topicName}'
-      );
-      
+      print(
+          'Published message: $payload to topic: ${message.variableHeader?.topicName}');
     });
   } else {
     print(
-      'EMQX client connection failed - disconnecting, status is ${client.connectionStatus}');
+        'EMQX client connection failed - disconnecting, status is ${client.connectionStatus}');
     client.disconnect();
     exit(-1);
-    
   }
   return client;
 }
 
+void onMessage() {
+  print('Message Arrived');
+}
 
+void onConnected() {
+  NotificationService().showNotification(
+    0,
+    '새로운 알림이 있습니다.',
+    '서버와 연결되었습니다',
+  );
+  print('Connected');
+}
 
+void onDisconnected() {
+  NotificationService().showNotification(
+    0,
+    '새로운 알림이 있습니다.',
+    '서버와 연결이 해제되었습니다',
+  );
+  print('Disconneted');
+}
 
-void onMessage() { print('Message Arrived');}
-void onConnected() {  
-  NotificationService()
-      .showNotification(0, '새로운 알림이 있습니다.', '서버와 연결되었습니다',);
-  print('Connected');}
-void onDisconnected() { 
-  NotificationService()
-      .showNotification(0, '새로운 알림이 있습니다.', '서버와 연결이 해제되었습니다',);
-  print('Disconneted');}
-void onSubscribed(String topic) { print('subscribed topic: $topic');}
-void onSubscribeFail(String topic) { print('Failed to subscribe: $topic');}
-void onUnsubscribed(String topic) { print('Unsubscribed topic: $topic');}
-void pong() { print('Ping response client callback invoked');}
+void onSubscribed(String topic) {
+  print('subscribed topic: $topic');
+}
+
+void onSubscribeFail(String topic) {
+  print('Failed to subscribe: $topic');
+}
+
+void onUnsubscribed(String topic) {
+  print('Unsubscribed topic: $topic');
+}
+
+void pong() {
+  print('Ping response client callback invoked');
+}

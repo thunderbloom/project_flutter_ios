@@ -4,23 +4,19 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
 import 'package:project_flutter/pages/video_play.dart';
-
 import 'package:project_flutter/views/home_screen.dart';
-// import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/widgets/discover_card.dart';
 import 'package:project_flutter/widgets/svg_asset.dart';
 import 'package:project_flutter/widgets/icons.dart';
 import 'package:badges/badges.dart';
-
 import 'package:project_flutter/pages/show_history_db.dart';
-
-// import 'package:project_flutter/views/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -71,11 +67,38 @@ class _LodingState extends State<Loding> {
   }
 
   Widget build(BuildContext context) {
+    final logo = Hero(
+      tag: 'home',
+      child: Container(
+        // backgroundColor: Colors.white,
+        // radius: 100.0,
+        child: Image.asset('assets/images/winguardlogo.png'),
+      ),
+    );
+  
     return GetMaterialApp(
       home: Scaffold(
-        appBar: AppBar(backgroundColor: Color(0xff1160aa)), //보류 (필요없을거같음)
+        appBar: AppBar(
+          backgroundColor: Color(0xff1160aa), //보류 (필요없을거같음)
+          title: Text(
+            "HOME",
+            textAlign: TextAlign.center,
+          ),
+          //actions: <Widget>[
+          //  IconButton(
+          //      icon: Icon(Icons.logout),
+          //      onPressed: () async {
+          //        final prefs = await SharedPreferences.getInstance();
+          //        prefs.setBool('isLoggedIn', false);
+          //        Navigator.push(
+          //            context,
+          //            MaterialPageRoute(
+          //                builder: (context) => LoginPage())); // 로그아웃
+          //      }
+          //      )
+          //],
+        ),
         backgroundColor: Colors.white,
-
         body: SafeArea(
           child: Obx(
             () => globalController.checkLoading().isTrue
@@ -91,16 +114,7 @@ class _LodingState extends State<Loding> {
                         physics: BouncingScrollPhysics(),
                         //--------------
                         children: <Widget>[
-                          Text(
-                              textAlign: TextAlign.center,
-                              '우리집 수호천사',
-                              style: TextStyle(
-                                  color: Color(0xff1160aa),
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold)),
-                          SizedBox(
-                            height: 15,
-                          ),
+                          logo,
                           const HeaderWidget(),
                           CurrentWeatherWidget(
                             weatherDataCurrent: globalController
@@ -199,7 +213,6 @@ class _LodingState extends State<Loding> {
                   ),
           ),
         ),
-
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
@@ -254,11 +267,11 @@ class _LodingState extends State<Loding> {
   void sensor() {
     // Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
     Get.to(() => const HistoryData(), transition: Transition.rightToLeft);
-    
   }
 
   void cctv() {
     Get.to(() => VideoPlay(), transition: Transition.rightToLeft);
   }
+
   void adddevice() {}
 }
