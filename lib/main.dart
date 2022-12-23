@@ -3,6 +3,7 @@ import 'package:project_flutter/pages/login_page.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
 import 'package:project_flutter/pages/notification_service.dart';
+import 'package:get/get.dart';
 
 // void main() {
 //   runApp(const MyApp());

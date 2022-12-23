@@ -62,7 +62,7 @@ class _VideoPlayState extends State<VideoPlay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Video History"),
+        title: Text("영상 확인"),
         backgroundColor: Color(0xff1160aa),
       ),
       body: Container(
@@ -115,7 +115,8 @@ class _VideoPlayState extends State<VideoPlay> {
         ),
         Container(
           child: Text(
-            'Video history',
+            '저장된 영상 내역', style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ),

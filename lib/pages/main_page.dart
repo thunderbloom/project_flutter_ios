@@ -142,7 +142,7 @@ class _LodingState extends State<Loding> {
                                 DiscoverCard(
                                   // tag: "sensor",
                                   onTap: sensor,
-                                  title: "sensor",
+                                  title: "알림내역",
                                   subtitle: "정보를 확인하세요!",
                                   icons: SvgAsset(
                                     assetName: AssetName.headphone,
