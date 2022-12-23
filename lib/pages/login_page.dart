@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:project_flutter/pages/data_table.dart';
 import 'package:project_flutter/pages/device_page.dart';
 import 'package:project_flutter/pages/reset_pw_page.dart';
@@ -28,6 +29,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final db = Mysql();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
@@ -50,9 +52,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<List<Profiles>> getSQLData() async {
     final List<Profiles> profileList = [];
     final Mysql db = Mysql();
-    late MqttClient client;
-    var topic = "house/door";
-
+    late MqttClient client;   
+    final prefs = await SharedPreferences.getInstance();
     // await connect().then((value) {
     //                   client = value;
     //                 });
@@ -61,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
 
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
+      
       await conn
           .query(
               "SELECT Password FROM User WHERE user_id = '${idController.text}'")
@@ -72,17 +74,30 @@ class _LoginPageState extends State<LoginPage> {
         Digest decrpyted_password = decrypt(); //추가
 
         String pass_decrypt = decrpyted_password.toString(); // 추가
+        String userid = idController.text;
+        prefs.setString('id', userid);
+        // prefs.setString('password', pw);
 
         if (pw == pass_decrypt) {
           print("패스워드 일치");
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
-
-          connect().then((value) {
-            // ------------------------MQTT 연결
-            client = value;
-          });
-          client.subscribe(topic, MqttQos.atLeastOnce);
+          
+          connect().then((value) {  // ------------------------MQTT 연결
+                      client = value;
+                    });
+          // print("접속된 유저 id : $userid");
+          // client.subscribe('$userid', MqttQos.atLeastOnce);
+          
+          // final userId = UserID(userid) ;
+          
+          // Get.to(UserID, arguments: userid);
+          // var arg = Get.arguments;
+          // Text('${Get.arguments}');
+          // client.subscribe(topic, MqttQos.atLeastOnce);
+          // client.subscribe(userid, MqttQos.atLeastOnce);
+          
+          // print('MQTT subscribed from Topic : ${idController.text}');
         } else
           setState(() {
             print("패스워드 불일치");
@@ -90,10 +105,13 @@ class _LoginPageState extends State<LoginPage> {
               content: Text("비밀번호가 틀립니다."),
               duration: Duration(milliseconds: 700),
             ));
-          });
-      });
+          });      
+        }         
+      );
       setState(() {});
-    });
+    }
+    
+    );
     return profileList;
   }
 
@@ -115,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
-        tag: 'home',
+        tag: 'home',//CircleAvatar
         child: CircleAvatar(
           backgroundColor: Colors.white,
           radius: 90.0,
@@ -130,14 +148,21 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '아이디를 확인해주세요!';
-        } else if (value.length < 4) {
-          return '글자수가 너무 적습니다. 4자리 이상 아이디를 입력하세요.';
+          validator: (String? value) {
+        if (value!.isEmpty) {
+          return '아이디를 입력해주세요.';
         }
         return null;
       },
+
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return '아이디를 확인해주세요!';
+      //   } else if (value.length < 4) {
+      //     return '글자수가 너무 적습니다. 4자리 이상 아이디를 입력하세요.';
+      //   }
+      //   return null;
+      // },
     );
 
     final password = TextFormField(
@@ -150,14 +175,21 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '비밀번호를 입력해주세요';
-        } else if (value.length < 8) {
-          return '8자 이상 입력하세요';
+          validator: (String? value) {
+        if (value!.isEmpty) {
+          return '비밀번호를 입력해주세요.';
         }
         return null;
       },
+
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return '비밀번호를 입력해주세요';
+      //   } else if (value.length < 8) {
+      //     return '8자 이상 입력하세요';
+      //   }
+      //   return null;
+      // },
     );
 
     final loginButton = Padding(
@@ -167,12 +199,12 @@ class _LoginPageState extends State<LoginPage> {
           child: MaterialButton(
             minWidth: 200.0,
             height: 48.0,
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.setBool('isLoggedIn', true);
+            onPressed: ()  {
+              // if (_formKey.currentState!.validate()) {
+               //final prefs = await SharedPreferences.getInstance();
+                //prefs.setBool('isLoggedIn', true);
                 getSQLData();
-              }
+              // } 
             },
             color: Color(0xff11600aa),
             child: Text('로그인', style: TextStyle(color: Colors.white)),
@@ -236,3 +268,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+class UserID{
+  
+  String user_id;
+  
+  UserID(this.user_id);
+  
+}
+

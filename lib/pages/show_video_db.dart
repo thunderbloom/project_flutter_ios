@@ -3,30 +3,29 @@ import 'package:mysql1/mysql1.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:project_flutter/pages/data_table.dart';
 
-class HistoryData extends StatefulWidget {
-  const HistoryData({
+class VideoData extends StatefulWidget {
+  const VideoData({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<HistoryData> createState() => _HistoryDataState();
+  State<VideoData> createState() => _VideoDataState();
 }
 
-class _HistoryDataState extends State<HistoryData> {
-  Future<List<History>> getSQLData() async {
-    final List<History> historyList = [];
+class _VideoDataState extends State<VideoData> {
+  Future<List<Video>> getSQLData() async {
+    final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery =
-          'select sensor, status, datetime from History where user_id="test9999" order by datetime DESC';
+      String sqlQuery = 'select file_name, Datetime from Video';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
-          final historyModel = History(
-            sensor: res["sensor"],
-            status: res["status"],
-            datetime: res["datetime"],
+          final videoModel = Video(
+            // id: res["id"],
+            file_name: res["file_name"],
+            // Datetime: res["Datetime"],
           );
-          historyList.add(historyModel);
+          videoList.add(videoModel);
         }
       }).onError((error, stackTrace) {
         print(error);
@@ -34,16 +33,16 @@ class _HistoryDataState extends State<HistoryData> {
       });
       conn.close();
     });
-    return historyList;
+    return videoList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("알림내역",),
-      backgroundColor: Color(0xff1160aa),),
+      appBar: AppBar(title: Text("video")),
       body: Center(
         child: getDBData(),
+        //
       ),
     );
   }
@@ -63,21 +62,21 @@ class _HistoryDataState extends State<HistoryData> {
               final data = snapshot.data as List;
               return ListTile(
                 leading: Text(
-                  data[index].sensor.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-                title: Text(
-                  data[index].status.toString(),
+                  data[index].file_name.toString(),
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(
-                  data[index].datetime.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-                
+                //title: Text(
+                //  data[index].Datetime.toString(),
+                //  style: const TextStyle(
+                //    fontSize: 20,
+                //    fontWeight: FontWeight.bold,
+                //  ),
+                //),
+                //subtitle: Text(
+                //  data[index].Datetime.toString(),
+                //  style: const TextStyle(fontSize: 20),
+                //),
               );
             },
           );
