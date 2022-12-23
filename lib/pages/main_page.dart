@@ -24,7 +24,7 @@ import 'package:project_flutter/widgets/icons.dart';
 import 'package:badges/badges.dart';
 import 'package:project_flutter/pages/show_history_db.dart';
 import 'package:project_flutter/pages/mypage.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -53,6 +53,17 @@ class _LodingState extends State<Loding> {
 
   final RxBool _isLoading = true.obs;
 
+    
+  // Future<void> userinfo() async {  
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final String? userid = prefs.getString('id');
+  //       await userinfo().then((userid) {                      
+  //                     return userid;
+  //                     // client = value;
+  //                   });
+      
+  // }
+  
   //static final List<GetPage> pages = [
   //// ...
   //  GetPage(
@@ -104,7 +115,7 @@ class _LodingState extends State<Loding> {
                 //    backgroundImage: AssetImage('assets/weather/01d.png'),
                 //  ),
                 //],
-                accountName: Text('team3'),
+                accountName: Text('User'),
                 accountEmail: Text('logenzes@gmail.com'),
                 onDetailsPressed: () {
                   print('arrow is clicked');
