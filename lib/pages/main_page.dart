@@ -4,6 +4,7 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/main.dart';
 import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/pages/mypage.dart';
@@ -12,10 +13,7 @@ import 'package:project_flutter/pages/show_video_db.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
 import 'package:project_flutter/pages/video_play.dart';
-
 import 'package:project_flutter/views/home_screen.dart';
-// import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/widgets/discover_card.dart';
@@ -23,6 +21,7 @@ import 'package:project_flutter/widgets/svg_asset.dart';
 import 'package:project_flutter/widgets/icons.dart';
 import 'package:badges/badges.dart';
 import 'package:project_flutter/pages/show_history_db.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project_flutter/pages/mypage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,6 +73,15 @@ class _LodingState extends State<Loding> {
   //];
 
   Widget build(BuildContext context) {
+    final logo = Hero(
+      tag: 'home',
+      child: Container(
+        // backgroundColor: Colors.white,
+        // radius: 100.0,
+        child: Image.asset('assets/images/winguardlogo.png'),
+      ),
+    );
+  
     return GetMaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -201,7 +209,6 @@ class _LodingState extends State<Loding> {
           ),
         ),
         backgroundColor: Colors.white,
-
         body: SafeArea(
           child: Obx(
             () => globalController.checkLoading().isTrue
@@ -217,17 +224,7 @@ class _LodingState extends State<Loding> {
                         physics: BouncingScrollPhysics(),
                         //--------------
                         children: <Widget>[
-                          Text(
-                              textAlign: TextAlign.center,
-                              '우리집 수호천사',
-                              style: TextStyle(
-                                  color: Color(0xff1160aa),
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold)),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          //-------------------
+                          logo,
                           const HeaderWidget(),
                           InkWell(
                             onTap: () {
