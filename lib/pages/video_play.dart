@@ -18,7 +18,7 @@ class _VideoPlayState extends State<VideoPlay> {
     final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery = 'select file_name from Video';
+      String sqlQuery = 'select file_name from Video order by file_name DESC';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final videoModel = Video(
@@ -129,10 +129,11 @@ class _VideoPlayState extends State<VideoPlay> {
         //  ],
         //)
         Container(
-            child: SizedBox(
-          child: getDBData(),
-          height: 50,
-        )),
+          child: SizedBox(
+            child: getDBData(),
+            height: 300,
+          ),
+        ),
       ])),
     );
   }
