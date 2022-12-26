@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
@@ -24,7 +26,7 @@ import 'package:project_flutter/widgets/icons.dart';
 import 'package:badges/badges.dart';
 import 'package:project_flutter/pages/show_history_db.dart';
 import 'package:project_flutter/pages/mypage.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
@@ -52,6 +54,24 @@ class _LodingState extends State<Loding> {
       Get.put(GlobalController(), permanent: true);
 
   final RxBool _isLoading = true.obs;
+//
+//  //Future<void> UserID() async {
+//  //  final prefs = await SharedPreferences.getInstance();
+//  //  String? userid = prefs.getString('id');
+//  //  print('userid:$userid');
+//  //}
+//
+//  // Future<void> UserID() async {
+//  //   final prefs = await SharedPreferences.getInstance();
+//  //   String? userid = jsonEncode(prefs.getString('id'));
+//  //   prefs.setString('id', userid);
+//  // }
+//
+//  //Future<void> _UserID() async {
+//  //  //final prefs = await SharedPreferences.getInstance();
+//  //  String? id = jsonDecode(prefs.getString('id'));
+//  //  return (userid);
+//  //}
 
   //static final List<GetPage> pages = [
   //// ...
@@ -104,7 +124,7 @@ class _LodingState extends State<Loding> {
                 //    backgroundImage: AssetImage('assets/weather/01d.png'),
                 //  ),
                 //],
-                accountName: Text('team3'),
+                accountName: Text('team3'), //$userid
                 accountEmail: Text('logenzes@gmail.com'),
                 onDetailsPressed: () {
                   print('arrow is clicked');
@@ -255,7 +275,7 @@ class _LodingState extends State<Loding> {
                                 DiscoverCard(
                                   // tag: "sensor",
                                   onTap: sensor,
-                                  title: "sensor",
+                                  title: "알림내역",
                                   subtitle: "정보를 확인하세요!",
                                   icons: SvgAsset(
                                     assetName: AssetName.headphone,
