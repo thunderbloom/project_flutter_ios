@@ -6,6 +6,7 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/device_registration.dart';
 import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/main.dart';
 import 'package:project_flutter/pages/login_page.dart';
@@ -90,7 +91,7 @@ class _LodingState extends State<Loding> {
         child: Image.asset('assets/images/winguardlogo.png'),
       ),
     );
-  
+
     return GetMaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -356,7 +357,11 @@ class _LodingState extends State<Loding> {
   }
 
   void adddevice1() {
-    Get.to(() => VideoData(), transition: Transition.rightToLeft);
+    Get.to(
+        () => Device_re(
+              title: 'device_re',
+            ),
+        transition: Transition.rightToLeft);
   }
 
   void adddevice2() {

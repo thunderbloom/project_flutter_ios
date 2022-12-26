@@ -24,11 +24,15 @@ void main() => runApp(LoginPage());
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+  //,this.userinfo
+  //final String? userinfo;
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String useridinfo = '';
+  //SharedPreferences _prefs;
 
   final db = Mysql();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -49,10 +53,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    getSQLData();
+  }
+
   Future<List<Profiles>> getSQLData() async {
     final List<Profiles> profileList = [];
     final Mysql db = Mysql();
-    late MqttClient client;   
+    late MqttClient client;
     final prefs = await SharedPreferences.getInstance();
     // await connect().then((value) {
     //                   client = value;
@@ -62,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
 
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
-      
+
       await conn
           .query(
               "SELECT Password FROM User WHERE user_id = '${idController.text}'")
@@ -76,27 +86,32 @@ class _LoginPageState extends State<LoginPage> {
         String pass_decrypt = decrpyted_password.toString(); // 추가
         String userid = idController.text;
         prefs.setString('id', userid);
+        //useridinfo = (_prefs.getString('id') ?? '');
+        final String? useridinfo = prefs.getString('id');
         // prefs.setString('password', pw);
+        //print('$useridinfo');
 
         if (pw == pass_decrypt) {
           print("패스워드 일치");
+          print('$useridinfo');
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
-          
-          connect().then((value) {  // ------------------------MQTT 연결
-                      client = value;
-                    });
+
+          connect().then((value) {
+            // ------------------------MQTT 연결
+            client = value;
+          });
           // print("접속된 유저 id : $userid");
           // client.subscribe('$userid', MqttQos.atLeastOnce);
-          
+
           // final userId = UserID(userid) ;
-          
+
           // Get.to(UserID, arguments: userid);
           // var arg = Get.arguments;
           // Text('${Get.arguments}');
           // client.subscribe(topic, MqttQos.atLeastOnce);
           // client.subscribe(userid, MqttQos.atLeastOnce);
-          
+
           // print('MQTT subscribed from Topic : ${idController.text}');
         } else
           setState(() {
@@ -105,13 +120,10 @@ class _LoginPageState extends State<LoginPage> {
               content: Text("비밀번호가 틀립니다."),
               duration: Duration(milliseconds: 700),
             ));
-          });      
-        }         
-      );
+          });
+      });
       setState(() {});
-    }
-    
-    );
+    });
     return profileList;
   }
 
@@ -133,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
-        tag: 'home',//CircleAvatar
+        tag: 'home', //CircleAvatar
         child: CircleAvatar(
           backgroundColor: Colors.white,
           radius: 90.0,
@@ -148,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-          validator: (String? value) {
+      validator: (String? value) {
         if (value!.isEmpty) {
           return '아이디를 입력해주세요.';
         }
@@ -175,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-          validator: (String? value) {
+      validator: (String? value) {
         if (value!.isEmpty) {
           return '비밀번호를 입력해주세요.';
         }
@@ -199,12 +211,12 @@ class _LoginPageState extends State<LoginPage> {
           child: MaterialButton(
             minWidth: 200.0,
             height: 48.0,
-            onPressed: ()  {
+            onPressed: () {
               // if (_formKey.currentState!.validate()) {
-               //final prefs = await SharedPreferences.getInstance();
-                //prefs.setBool('isLoggedIn', true);
-                getSQLData();
-              // } 
+              //final prefs = await SharedPreferences.getInstance();
+              //prefs.setBool('isLoggedIn', true);
+              getSQLData();
+              // }
             },
             color: Color(0xff11600aa),
             child: Text('로그인', style: TextStyle(color: Colors.white)),
@@ -264,15 +276,12 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }
-class UserID{
-  
-  String user_id;
-  
-  UserID(this.user_id);
-  
-}
 
+class UserID {
+  String user_id;
+
+  UserID(this.user_id);
+}

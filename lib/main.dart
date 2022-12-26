@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn ? const LoginPage() : const Loding(),
+      //home: isLoggedIn ? const LoginPage() : const Loding(),
+      home: const LoginPage(),
     );
   }
 }
