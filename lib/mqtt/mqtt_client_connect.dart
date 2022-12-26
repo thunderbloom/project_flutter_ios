@@ -14,16 +14,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-
-
-
 Future<MqttClient> connect() async {
   final prefs = await SharedPreferences.getInstance();
   final String? userid = prefs.getString('id'); 
   print(userid);
   MqttServerClient client = 
     // MqttServerClient.withPort('34.64.233.244', 'test999', 19883);
-    MqttServerClient.withPort('34.64.233.244', 'ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f', 19883);
+    MqttServerClient.withPort('34.64.233.244', 'ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071faa', 19883);
   client.logging(on : true);
   client.onConnected = onConnected;
   // var value = Get.arguments;
@@ -42,7 +39,7 @@ Future<MqttClient> connect() async {
   final connMess = MqttConnectMessage()
       // .withClientIdentifier("test999")
       .withClientIdentifier(
-          "ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071f")
+          "ayWebSocketClient_123456_33f7423c-a3b7-46b1-8a1a-26937e4a071faa")
       .authenticateAs("admin", "qwer123")
       // .keepAliveFor(60)
       .withWillTopic('willtopic')

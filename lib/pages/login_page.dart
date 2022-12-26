@@ -19,8 +19,11 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:project_flutter/mqtt/mqtt_client_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:project_flutter/pages/notification_service.dart';
 
 void main() => runApp(LoginPage());
+
+String userinfo = '';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,6 +38,8 @@ class _LoginPageState extends State<LoginPage> {
   //SharedPreferences _prefs;
 
   final db = Mysql();
+  late MqttClient client;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -69,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     //                 });
 
     // await client.subscribe(topic, MqttQos.atLeastOnce);
-
+    // NotificationService().init();
     await db.getConnection().then((conn) async {
       String test = idController.text.toString();
 
@@ -86,14 +91,15 @@ class _LoginPageState extends State<LoginPage> {
         String pass_decrypt = decrpyted_password.toString(); // 추가
         String userid = idController.text;
         prefs.setString('id', userid);
-        //useridinfo = (_prefs.getString('id') ?? '');
-        final String? useridinfo = prefs.getString('id');
+        final String? userinfo = prefs.getString('id');
+        // setState((){});
         // prefs.setString('password', pw);
         //print('$useridinfo');
 
         if (pw == pass_decrypt) {
           print("패스워드 일치");
-          print('$useridinfo');
+          print(userinfo);
+          // WidgetsBinding.instance.addPostFrameCallback((_) async {
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) => Loding()));
 
@@ -101,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
             // ------------------------MQTT 연결
             client = value;
           });
+          print(userinfo);
           // print("접속된 유저 id : $userid");
           // client.subscribe('$userid', MqttQos.atLeastOnce);
 
@@ -113,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
           // client.subscribe(userid, MqttQos.atLeastOnce);
 
           // print('MQTT subscribed from Topic : ${idController.text}');
+          // });
         } else
           setState(() {
             print("패스워드 불일치");
@@ -122,7 +130,9 @@ class _LoginPageState extends State<LoginPage> {
             ));
           });
       });
-      setState(() {});
+      setState(() {
+        // final RxBool _isLoading = true.obs;
+      });
     });
     return profileList;
   }
