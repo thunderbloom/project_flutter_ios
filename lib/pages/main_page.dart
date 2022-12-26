@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:get/get.dart';
 import 'package:project_flutter/controllers/global_controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:project_flutter/pages/device_registration.dart';
 import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/main.dart';
 import 'package:project_flutter/pages/login_page.dart';
@@ -31,12 +34,9 @@ import 'package:mqtt_client/mqtt_client.dart';
 // String userinfo = login.userinfo;
 
 
-
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
-  
-  
-  
+
   @override
   _LodingState createState() => _LodingState();
 }
@@ -44,28 +44,27 @@ class Loding extends StatefulWidget {
 class _LodingState extends State<Loding> {
   String userinfo = '';
   // String userid = '';
-  
-  late MqttClient client; 
+
+  late MqttClient client;
   @override
-    void initState() {
+  void initState() {
     super.initState();
     setData();
   }
 
-
-  void setData() async{
+  void setData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
+    setState(() {
       userinfo = prefs.getString('id')!;
     });
     // print('여기까진 잘 됨 $userinfo');
-    
-    try{
-      setState((){
-      final String? userinfo = prefs.getString('id');
-      print('여기까진 잘 됨 $userinfo');
+
+    try {
+      setState(() {
+        final String? userinfo = prefs.getString('id');
+        print('여기까진 잘 됨 $userinfo');
       });
-    }catch(e){}
+    } catch (e) {}
   }
   // loadCounter() async {
   //   // SharedPreferences의 인스턴스를 필드에 저장
@@ -73,35 +72,49 @@ class _LodingState extends State<Loding> {
   //   // late MqttClient client;
   //   final String? userid = prefs.getString('id');
   //   setState((){});
-    
+
   //   // setState(() {
   //   //   // SharedPreferences에 counter로 저장된 값을 읽어 필드에 저장. 없을 경우 0으로 대입
   //   //   final String? userid = (prefs.getString('id'));
   //   // });
-      // print('여기까지 왔나 $userinfo');
+  // print('여기까지 왔나 $userinfo');
   //     String userid2 = '$userid';
   //   //   return id;
-      
+
   //   // });
   //   // String userid2 = '$userid';
   // }
 
- 
-
   @override
-  
   int _selectedIndex = 0;
   int pageIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  
+
   final GlobalController globalController =
       Get.put(GlobalController(), permanent: true);
-   
+
   final RxBool _isLoading = true.obs;
+//
+//  //Future<void> UserID() async {
+//  //  final prefs = await SharedPreferences.getInstance();
+//  //  String? userid = prefs.getString('id');
+//  //  print('userid:$userid');
+//  //}
+//
+//  // Future<void> UserID() async {
+//  //   final prefs = await SharedPreferences.getInstance();
+//  //   String? userid = jsonEncode(prefs.getString('id'));
+//  //   prefs.setString('id', userid);
+//  // }
+//
+//  //Future<void> _UserID() async {
+//  //  //final prefs = await SharedPreferences.getInstance();
+//  //  String? id = jsonDecode(prefs.getString('id'));
+//  //  return (userid);
+//  //}
 
   Widget build(BuildContext context) {
-    
     final logo = Hero(
       tag: 'home',
       child: Container(
@@ -110,8 +123,6 @@ class _LodingState extends State<Loding> {
         child: Image.asset('assets/images/winguardlogo.png'),
       ),
     );
-    
-    
 
     return GetMaterialApp(
       home: Scaffold(
@@ -137,7 +148,7 @@ class _LodingState extends State<Loding> {
           ],
           backgroundColor: Color(0xff1160aa),
         ), //보류 (필요없을거같음)
-        drawer: Drawer(          
+        drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -154,7 +165,7 @@ class _LodingState extends State<Loding> {
                 //    backgroundImage: AssetImage('assets/weather/01d.png'),
                 //  ),
                 //],
-                
+
                 accountName: Text("$userinfo"),
                 accountEmail: Text('logenzes@gmail.com'),
                 onDetailsPressed: () {
@@ -218,25 +229,25 @@ class _LodingState extends State<Loding> {
               ),
               Divider(),
               ListTile(
-                  leading: Icon(
-                    Icons.logout_rounded, //question_answer,
-                    color: Colors.grey[850],
-                  ),
-                  title: Text('로그아웃'),
-                  onTap: () async {
-                    // print('로그아웃 is clicked');
+                leading: Icon(
+                  Icons.logout_rounded, //question_answer,
+                  color: Colors.grey[850],
+                ),
+                title: Text('로그아웃'),
+                onTap: () async {
+                  // print('로그아웃 is clicked');
                   // final prefs = await SharedPreferences.getInstance();
                   //  prefs.setBool('isLoggedIn', false);
                   //  client.disconnect();
                   //  prefs.remove('id');
-                   print('로그아웃');
+                  print('로그아웃');
                   //  WidgetsBinding.instance.addPostFrameCallback((_) async {
-                   Navigator.pushAndRemoveUntil(
-                       context,
-                       MaterialPageRoute(
-                           builder: (context) => LoginPage()),(route)=>false);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      (route) => false);
                   // });
-                           // 로그아웃}
+                  // 로그아웃}
                   // () async{
                   //  final prefs = await SharedPreferences.getInstance();
                   //  prefs.setBool('isLoggedIn', false);
@@ -245,9 +256,9 @@ class _LodingState extends State<Loding> {
                   //      MaterialPageRoute(
                   //          builder: (context) => LoginPage())); // 로그아웃
                   //  //print('로그아웃 is clicked');
-                  },
-                  // trailing: Icon(Icons.add),
-                  ),
+                },
+                // trailing: Icon(Icons.add),
+              ),
             ],
           ),
         ),
@@ -392,7 +403,11 @@ class _LodingState extends State<Loding> {
   }
 
   void adddevice1() {
-    Get.to(() => VideoData(), transition: Transition.rightToLeft);
+    Get.to(
+        () => Device_re(
+              title: 'device_re',
+            ),
+        transition: Transition.rightToLeft);
   }
 
   void adddevice2() {
