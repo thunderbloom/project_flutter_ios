@@ -29,7 +29,6 @@ class Device_re extends StatefulWidget {
 class _Device_regis extends State<Device_re> {
   final db = Mysql();
   final _formKey = GlobalKey<FormState>();
-  //String userid = '';
   String userinfo = '';
 
   @override
