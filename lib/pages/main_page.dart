@@ -30,7 +30,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 
 // String userinfo = login.userinfo;
 
-String userinfo = '';
+
 
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
