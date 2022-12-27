@@ -1,4 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/material.dart';
+import 'package:project_flutter/pages/show_history_db.dart';
+import 'package:get/get.dart';
 /// Step 2. Create a NotificationService class
 
 class NotificationService {
@@ -21,7 +24,9 @@ class NotificationService {
       AndroidInitializationSettings("icon");
     const InitializationSettings initializationSettings =
       InitializationSettings(android: androidInitializationSettings);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    // onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );    
   }
 
   // Some configurations for platform-specific notification's details.
@@ -45,4 +50,19 @@ class NotificationService {
   Future<void> showNotification(int id, String title, String body) async {
     await flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
   }
+//   void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+//     final String? payload = notificationResponse.payload;
+//     if (notificationResponse.payload != null) {
+//       debugPrint('notification payload: $payload');
+//     }
+//     await Navigator.push(
+//       context,
+//       MaterialPageRoute<void>(builder: (context) => HistoryData(payload)),
+//     );
+// }
+  
+//   void sensor() {
+//     // Get.to(() => HomeScreen(), transition: Transition.rightToLeft);
+//     Get.to(() => HistoryData());
+//   }
 }
