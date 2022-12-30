@@ -18,7 +18,6 @@ class _VideoPlayState extends State<VideoPlay> {
   String userinfo = '';
   // String userid = '';
 
-  
   @override
   void initState() {
     loadVideoPlayer();
@@ -31,21 +30,22 @@ class _VideoPlayState extends State<VideoPlay> {
     setState(() {
       userinfo = prefs.getString('id')!;
     });
-    
+
     try {
       setState(() {
-        final String? userinfo = prefs.getString('id');        
+        final String? userinfo = prefs.getString('id');
       });
     } catch (e) {}
   }
-  //-----------------------------------------------------------------여기까지---------------------
-  
+  //------------------------------------여기까지----------------------------------
+
   //----------------------------------------
   Future<List<Video>> getSQLData() async {
     final List<Video> videoList = [];
     final Mysql db = Mysql();
     await db.getConnection().then((conn) async {
-      String sqlQuery = 'select file_name from Video where user_id="$userinfo" order by file_name DESC';
+      String sqlQuery =
+          'select file_name from Video where user_id="$userinfo" order by file_name DESC';
       await conn.query(sqlQuery).then((result) {
         for (var res in result) {
           final videoModel = Video(
@@ -67,7 +67,6 @@ class _VideoPlayState extends State<VideoPlay> {
 
   late VideoPlayerController controller;
 
-  
   loadVideoPlayer() {
     controller = VideoPlayerController.network(
         'http://34.64.233.244:9898/download/video2022-12-21_10-24-08-503542.mp4');
@@ -87,77 +86,88 @@ class _VideoPlayState extends State<VideoPlay> {
         title: Text("영상 확인"),
         backgroundColor: Color(0xff1160aa),
       ),
-      body: Container(
-          child: ListView(children: [
-        AspectRatio(
-          aspectRatio: controller.value.aspectRatio,
-          child: VideoPlayer(controller),
-        ),
-        Container(
-          //duration of video
-          child:
-              Text("Total Duration: " + controller.value.duration.toString()),
-        ),
-        Container(
-            child: VideoProgressIndicator(controller,
-                allowScrubbing: true,
-                colors: VideoProgressColors(
-                  backgroundColor: Colors.redAccent,
-                  playedColor: Colors.green,
-                  bufferedColor: Colors.purple,
-                ))),
-        Container(
-          child: Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    if (controller.value.isPlaying) {
-                      controller.pause();
-                    } else {
-                      controller.play();
-                    }
-
-                    setState(() {});
-                  },
-                  icon: Icon(controller.value.isPlaying
-                      ? Icons.pause
-                      : Icons.play_arrow)),
-              IconButton(
-                  onPressed: () {
-                    controller.seekTo(Duration(seconds: 0));
-
-                    setState(() {});
-                  },
-                  icon: Icon(Icons.stop))
-            ],
+      body: SizedBox(
+        child: Container(
+            //resizeToAvoidBottomInset: true,
+            //body: SafeArea(
+            child: ListView(children: [
+          AspectRatio(
+            aspectRatio: controller.value.aspectRatio,
+            child: VideoPlayer(controller),
           ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          child: Text(
-            '저장된 영상 내역',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+          Container(
+            //duration of video
+            child:
+                Text("Total Duration: " + controller.value.duration.toString()),
           ),
-        ),
-        //new Row
-        //new Row(
-        //  children: <Widget>[
-        //    Expanded(
-        //        child: SizedBox(
-        //      height: 50,
-        //      child: getDBData(),
-        //    ))
-        //  ],
-        //)
-        Container(
-            child: SizedBox(
-          child: getDBData(),
-          height: 300,
-        )),
-      ])),
+          Container(
+              // width: 48,
+              // height: 48,
+              child: VideoProgressIndicator(controller,
+                  allowScrubbing: true,
+                  colors: VideoProgressColors(
+                    backgroundColor: Colors.redAccent,
+                    playedColor: Colors.green,
+                    bufferedColor: Colors.purple,
+                  ))),
+          Container(
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      if (controller.value.isPlaying) {
+                        controller.pause();
+                      } else {
+                        controller.play();
+                      }
+
+                      setState(() {});
+                    },
+                    icon: Icon(controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow)),
+                IconButton(
+                    onPressed: () {
+                      controller.seekTo(Duration(seconds: 0));
+
+                      setState(() {});
+                    },
+                    icon: Icon(Icons.stop))
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 48,
+            height: 48,
+            //height: 20,
+          ),
+          Container(
+            child: Text(
+              '저장된 영상 내역',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          //new Row
+          //new Row(
+          //  children: <Widget>[
+          //    Expanded(
+          //        child: SizedBox(
+          //      height: 50,
+          //      child: getDBData(),
+          //    ))
+          //  ],
+          //)
+          Container(
+              child: SizedBox(
+            // width: 20,
+            // height: 20,
+            width: 100,
+            child: getDBData(),
+            //height: 300,
+          )),
+        ])),
+      ),
     );
   }
 
