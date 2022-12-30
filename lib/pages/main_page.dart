@@ -33,7 +33,6 @@ import 'package:mqtt_client/mqtt_client.dart';
 
 // String userinfo = login.userinfo;
 
-
 class Loding extends StatefulWidget {
   const Loding({Key? key}) : super(key: key);
 
@@ -62,7 +61,7 @@ class _LodingState extends State<Loding> {
 
     try {
       setState(() {
-        final String? userinfo = prefs.getString('id');        
+        final String? userinfo = prefs.getString('id');
       });
     } catch (e) {}
   }
@@ -139,13 +138,15 @@ class _LodingState extends State<Loding> {
             //    print('Shopping cart button is clicked');
             //  },
             //),
-            IconButton(
-              icon: Icon(Icons.search), // 검색 아이콘 생성
-              onPressed: () {
-                // 아이콘 버튼 실행
-                print('Search button is clicked');
-              },
-            ),
+//---------------12/29 주석처리 ---------------------------------------------
+            // IconButton(
+            //   icon: Icon(Icons.search), // 검색 아이콘 생성
+            //   onPressed: () {
+            //     // 아이콘 버튼 실행
+            //     print('Search button is clicked');
+            //   },
+            // ),
+//------------------여기까지-------------------------------------------------
           ],
           backgroundColor: Color(0xff1160aa),
         ), //보류 (필요없을거같음)
@@ -170,9 +171,11 @@ class _LodingState extends State<Loding> {
                 accountName: Text("$userinfo 님"),
                 accountEmail: Text('환영합니다!!'),
                 // accountEmail: Text('logenzes@gmail.com'),
-                onDetailsPressed: () {
-                  print('arrow is clicked');
-                },
+//------------------------------주석처리------------------------------------------
+                // onDetailsPressed: () {
+                //   print('arrow is clicked');
+                // },
+//------------------------------------------------------------------------------
                 decoration: BoxDecoration(
                     color: Color(0xff1160aa), //s.red[200],
                     borderRadius: BorderRadius.only(
@@ -227,7 +230,7 @@ class _LodingState extends State<Loding> {
                 //trailing: Icon(Icons.add),
               ),
               SizedBox(
-                height: 280,
+                height: 180,
               ),
               Divider(),
               ListTile(
