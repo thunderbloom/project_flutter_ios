@@ -14,12 +14,13 @@ class HistoryData extends StatefulWidget {
 }
 
 class _HistoryDataState extends State<HistoryData> {
-
   //------------------------------------------로그인 정보 가져오기---------------//
   String userinfo = '';
+  String sensor = '';
+  String status = '';
+  String datetime = '';
   // String userid = '';
 
-  
   @override
   void initState() {
     super.initState();
@@ -31,16 +32,14 @@ class _HistoryDataState extends State<HistoryData> {
     setState(() {
       userinfo = prefs.getString('id')!;
     });
-   
+
     try {
       setState(() {
-        final String? userinfo = prefs.getString('id');        
+        final String? userinfo = prefs.getString('id');
       });
     } catch (e) {}
   }
   //-----------------------------------------------------------------여기까지---------------------
-
-
 
   Future<List<History>> getSQLData() async {
     final List<History> historyList = [];
@@ -69,8 +68,13 @@ class _HistoryDataState extends State<HistoryData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("알림내역",),
-      backgroundColor: Color(0xff1160aa),),
+      appBar: AppBar(
+        title: Text(
+          "알림내역",
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xff1160aa),
+      ),
       body: Center(
         child: getDBData(),
       ),
@@ -90,24 +94,90 @@ class _HistoryDataState extends State<HistoryData> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final data = snapshot.data as List;
-              return ListTile(
-                leading: Text(
-                  data[index].sensor.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-                title: Text(
-                  data[index].status.toString(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              if (data[index].sensor.toString() == 'door') {
+                sensor = '현관문';
+              } else if (data[index].sensor.toString() == 'camera') {
+                sensor = '카메라';
+              } else {
+                sensor = '베란다';
+              }
+              if (data[index].status.toString() == 'open') {
+                status = '문열림';
+              } else if (data[index].status.toString() == 'close') {
+                status = '문닫힘';
+              } else {
+                status = '사람 접근 감지';
+              }
+              datetime = data[index].datetime.toString();
+              String datetime1 = datetime.substring(0, datetime.length - 5);
+              return Card(
+                  child: Container(
+                      child: Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text(
+                      status,
+                      //data[index].status.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      datetime1,
+                      //data[index].datetime.toString(),
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    leading: Text(
+                      sensor,
+                      //data[index].sensor.toString(),
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
-                ),
-                subtitle: Text(
-                  data[index].datetime.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-                
-              );
+                ],
+              )));
+              // return Padding(
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: <Widget>[
+              //         ListTile(
+              //           title: Text(
+              //             data[index].status.toString(),
+              //             style: const TextStyle(
+              //               fontSize: 20,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //           subtitle: Text(
+              //             data[index].datetime.toString(),
+              //             style: const TextStyle(fontSize: 20),
+              //           ),
+              //           leading: Text(
+              //             data[index].sensor.toString(),
+              //             style: const TextStyle(fontSize: 20),
+              //           ),
+              //         ),
+              //       ],
+              //     ));
+              // return ListTile(
+              //   leading: Text(
+              //     data[index].sensor.toString(),
+              //     style: const TextStyle(fontSize: 20),
+              //   ),
+              //   title: Text(
+              //     data[index].status.toString(),
+              //     style: const TextStyle(
+              //       fontSize: 20,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              //   subtitle: Text(
+              //     data[index].datetime.toString(),
+              //     style: const TextStyle(fontSize: 20),
+              //   ),
+              // );
             },
           );
         });

@@ -7,7 +7,6 @@ import 'package:project_flutter/pages/show_history_db.dart';
 import 'package:get/get.dart';
 
 /// Step 2. Create a NotificationService class
-
 class NotificationService {
   // Singleton pattern, https://en.wikipedia.org/wiki/Singleton_pattern
   // 1.The _internal() construction is just a name often given to constructors

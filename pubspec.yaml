@@ -66,10 +66,44 @@ dependencies:
   fluttertoast: ^8.1.2
   pull_to_refresh: ^2.0.0
   push: ^0.1.3
+  # file_picker: ^5.2.4
+  awesome_notifications: ^0.7.4+1
+  flutter_launcher_icons: ^0.11.0
+  app_settings: ^4.1.8
+  awesome_dialog: ^3.0.2
+  url_launcher: ^6.1.7
+  webview_flutter_wkwebview: ^3.0.1
+  webview_flutter: ^4.0.1
+  wakelock_macos: ^0.4.0
+  line_awesome_flutter: ^2.0.0
+  #flutter_live: ^1.0.16
+  #html: ^0.15.1
+  ## flutter_webrtc: ^0.6.10+hotfix.1
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/res/drawable-hdpi/ic_notifications_active.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/res/drawable-hdpi/ic_notifications_active.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/icons/res/drawable-hdpi/ic_notifications_active.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/res/drawable-hdpi/ic_notifications_active.png"
+
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
+ 
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -77,6 +111,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -101,6 +136,7 @@ flutter:
     - assets/icons/
     - assets/weather/
     - assets/images/
+    - assets/icons/res/drawable-hdpi/ic_notifications_active.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

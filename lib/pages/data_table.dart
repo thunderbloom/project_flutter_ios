@@ -40,12 +40,13 @@ class Devices {
 }
 
 class History {
+  int? idx;
   String? user_id;
   String? sensor;
   String? status;
   DateTime? datetime;
 
-  History({this.user_id, this.sensor, this.status, this.datetime});
+  History({this.idx, this.user_id, this.sensor, this.status, this.datetime});
 }
 
 class Video {
@@ -57,5 +58,15 @@ class Video {
     this.user_id,
     this.video_path,
     this.file_name,
+  });
+}
+
+class UserIp {
+  String? user_id;
+  String? ip;
+
+  UserIp({
+    this.user_id,
+    this.ip,
   });
 }

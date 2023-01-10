@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
@@ -9,15 +10,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:project_flutter/pages/device_registration.dart';
 import 'package:project_flutter/pages/login_page.dart';
 import 'package:project_flutter/main.dart';
-import 'package:project_flutter/pages/login_page.dart';
-import 'package:project_flutter/pages/mypage.dart';
+import 'package:project_flutter/pages/mysql.dart';
+import 'package:project_flutter/pages/noticeboard.dart';
+import 'package:project_flutter/pages/show_user_db.dart';
+import 'package:project_flutter/pages/settings.dart';
 import 'package:project_flutter/pages/show_device_db.dart';
 import 'package:project_flutter/pages/show_video_db.dart';
 import 'package:project_flutter/widgets/current_weather_widget.dart';
 import 'package:project_flutter/widgets/header_widget.dart';
 import 'package:project_flutter/pages/video_play.dart';
 import 'package:project_flutter/views/home_screen.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_flutter/widgets/discover_card.dart';
 import 'package:project_flutter/widgets/svg_asset.dart';
@@ -26,10 +28,14 @@ import 'package:badges/badges.dart';
 import 'package:project_flutter/pages/show_history_db.dart';
 import 'package:project_flutter/pages/login_page.dart' as login;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:project_flutter/pages/mypage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project_flutter/mqtt/mqtt_client_connect.dart' as mqtt;
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:project_flutter/pages/settings.dart';
+import 'package:app_settings/app_settings.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:project_flutter/pages/live_stream.dart';
+import '../mqtt/mqtt_client_connect.dart';
+// String userinfo = login.userinfo;
 
 // String userinfo = login.userinfo;
 
@@ -40,9 +46,17 @@ class Loding extends StatefulWidget {
   _LodingState createState() => _LodingState();
 }
 
+class Constants {
+  Constants._();
+  static const double padding = 20;
+  static const double avatarRadius = 45;
+}
+
 class _LodingState extends State<Loding> {
   //------------------------------------------로그인 정보 가져오기---------------//
   String userinfo = '';
+  String userIp = '';
+  String username = '';
   // String userid = '';
 
   late MqttClient client;
@@ -50,10 +64,30 @@ class _LodingState extends State<Loding> {
   void initState() {
     super.initState();
     setData();
+    setData2();
+    setData3();
   }
 
   void setData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var isconnectedTrue = prefs.getBool('isConnectedTrue');
+
+    late MqttClient client;
+    final Mysql db = Mysql();
+    if (isconnectedTrue == true) {
+      print('aaaaaaaaaaaaaaaaaaaaaaaaaaa$isconnectedTrue');
+    } else if (isconnectedTrue == false) {
+      connect().then((value) {
+        // ------------------------MQTT 연결
+        client = value;
+        print('bbbbbbbbbbbbbbbbbbbbbbbbbbb$isconnectedTrue');
+      });
+    } else {}
+    ;
+    // connect().then((value) {
+    //   // ------------------------MQTT 연결
+    //   client = value;
+    // });
     setState(() {
       userinfo = prefs.getString('id')!;
     });
@@ -64,8 +98,104 @@ class _LodingState extends State<Loding> {
         final String? userinfo = prefs.getString('id');
       });
     } catch (e) {}
+
+    await db.getConnection().then((conn) async {
+      await conn
+          .query(
+        "SELECT ip FROM UserIp WHERE user_id = '$userinfo'",
+      )
+          .then((result) {
+        String ip = result.toString();
+
+        String userip = ip.substring(14, ip.length - 2); // db에 저장된 비밀번호
+
+        prefs.setString('userip', userip);
+
+        print(prefs.getString('userip'));
+        // prefs.setString('password', pw);
+      });
+    });
+  }
+
+  void setData2() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // late MqttClient client;
+    final Mysql db = Mysql();
+    // connect().then((value) {
+    //   // ------------------------MQTT 연결
+    //   client = value;
+    // });
+    setState(() {
+      userinfo = prefs.getString('id')!;
+    });
+
+    try {
+      setState(() {
+        final String? userinfo = prefs.getString('id');
+      });
+    } catch (e) {}
+
+    await db.getConnection().then((conn) async {
+      await conn
+          .query(
+        "SELECT name FROM User WHERE user_id = '$userinfo'",
+      )
+          .then((result) {
+        String name = result.toString();
+
+        String username = name.substring(16, name.length - 2);
+
+        prefs.setString('username', username);
+        username = prefs.getString('username')!;
+        print(prefs.getString('username'));
+        print('zzzzzzzzzzzzzzzzzzzzzzzzzzz$username');
+        // prefs.setString('password', pw);
+      });
+    });
+  }
+
+  void setData3() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username')!;
+    });
+    try {
+      setState(() {
+        final String? username = prefs.getString('username');
+
+        print(username);
+      });
+    } catch (e) {}
   }
   //-----------------------------------------------------------------여기까지---------------------
+
+  void showAlertDialog() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.question,
+      animType: AnimType.BOTTOMSLIDE,
+      title: '고객센터',
+      desc: '전화연결 042-471-9222',
+      //btnCancelOnPress: () {},
+      showCloseIcon: true,
+      btnOkText: '문의하기',
+      btnOkOnPress: () async {
+        Tel:
+        launchUrl(Uri.parse('tel:042-471-9222'));
+        final url = Uri.parse('tel:042-471-9222');
+        if (await canLaunchUrl(url)) {
+          launchUrl(url);
+        } else {
+          print("전화연결 실패 $url");
+        }
+        debugPrint('전화걸기 누름');
+        Text('전화연결');
+      },
+      btnOkIcon: Icons.call,
+    ).show();
+  }
+
+  //-----------------------------------------
   // loadCounter() async {
   //   // SharedPreferences의 인스턴스를 필드에 저장
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -127,7 +257,7 @@ class _LodingState extends State<Loding> {
     return GetMaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('윈가드'),
+          title: Text('WINGUARD'),
           centerTitle: true, // 중앙 정렬
           elevation: 0.0,
           actions: <Widget>[
@@ -138,15 +268,20 @@ class _LodingState extends State<Loding> {
             //    print('Shopping cart button is clicked');
             //  },
             //),
-//---------------12/29 주석처리 ---------------------------------------------
-            // IconButton(
-            //   icon: Icon(Icons.search), // 검색 아이콘 생성
-            //   onPressed: () {
-            //     // 아이콘 버튼 실행
-            //     print('Search button is clicked');
-            //   },
-            // ),
-//------------------여기까지-------------------------------------------------
+            IconButton(
+                icon: Icon(Icons.home), // 검색 아이콘 생성
+                onPressed: () async {
+                  final url = Uri.parse(
+                    'https://www.winguard.kr/mobile/',
+                  );
+                  if (await canLaunchUrl(url)) {
+                    launchUrl(url);
+                  } else {
+                    // ignore: avoid_print
+                    print("Can't launch $url");
+                  }
+                  print('live streaming clicked');
+                }),
           ],
           backgroundColor: Color(0xff1160aa),
         ), //보류 (필요없을거같음)
@@ -157,9 +292,9 @@ class _LodingState extends State<Loding> {
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   // 현재 계정 이미지 set
-                  backgroundImage: AssetImage('assets/weather/01d.png'),
+                  backgroundImage: AssetImage('assets/images/profile.png'),
                   backgroundColor: Colors.white,
-                ),
+                ), //fromARGB(255, 201, 231, 245)
                 //otherAccountsPictures: <Widget>[
                 //  // 다른 계정 이미지[] set
                 //  CircleAvatar(
@@ -168,14 +303,11 @@ class _LodingState extends State<Loding> {
                 //  ),
                 //],
 
-                accountName: Text("$userinfo 님"),
-                accountEmail: Text('환영합니다!!'),
-                // accountEmail: Text('logenzes@gmail.com'),
-//------------------------------주석처리------------------------------------------
-                // onDetailsPressed: () {
-                //   print('arrow is clicked');
-                // },
-//------------------------------------------------------------------------------
+                accountName: Text("ID:$userinfo"),
+                accountEmail: Text('$username 님 환영합니다'),
+                onDetailsPressed: () {
+                  print('arrow is clicked');
+                },
                 decoration: BoxDecoration(
                     color: Color(0xff1160aa), //s.red[200],
                     borderRadius: BorderRadius.only(
@@ -187,50 +319,52 @@ class _LodingState extends State<Loding> {
                     Icons.account_circle,
                     color: Colors.grey[850],
                   ),
-                  title: Text('회원정보 수정'),
-                  onTap: mypage
-                  //() {
-                  //  Navigator.push(context,
-                  //      MaterialPageRoute(builder: (context) => MyPage4()));
-                  //  //print('회원정보 수정 is clicked');
-                  //},
+                  title: Text('회원정보'),
+                  onTap: mypage),
+              ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    color: Colors.grey[850],
+                  ),
+                  title: Text('환경설정'),
+                  onTap: settingpage
+
                   //trailing: Icon(Icons.add),
                   ),
               ListTile(
-                leading: Icon(
-                  Icons.settings,
-                  color: Colors.grey[850],
-                ),
-                title: Text('환경설정'),
-                onTap: () {
-                  print('환경설정 is clicked');
-                },
-                //trailing: Icon(Icons.add),
-              ),
+                  leading: Icon(
+                    Icons.support_agent,
+                    color: Colors.grey[850],
+                  ),
+                  title: Text('고객센터'),
+                  onTap: showAlertDialog
+                  //() {
+                  //  print('고객센터 is clicked');
+                  //}
+                  //trailing: Icon(Icons.add),
+                  ),
               ListTile(
-                leading: Icon(
-                  Icons.support_agent,
-                  color: Colors.grey[850],
-                ),
-                title: Text('고객센터'),
-                onTap: () {
-                  print('고객센터 is clicked');
-                },
-                //trailing: Icon(Icons.add),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.report, //question_answer,
-                  color: Colors.grey[850],
-                ),
-                title: Text('공지사항'),
-                onTap: () {
-                  print('공지사항 is clicked');
-                },
-                //trailing: Icon(Icons.add),
-              ),
+                  leading: Icon(
+                    Icons.report, //question_answer,
+                    color: Colors.grey[850],
+                  ),
+                  title: Text('공지사항'),
+                  onTap: noticeboard
+                  //     () async {
+                  //   final url = Uri.parse(
+                  //     'http://34.64.233.244:9797/notice',
+                  //   );
+                  //   if (await canLaunchUrl(url)) {
+                  //     launchUrl(url);
+                  //   } else {
+                  //     // ignore: avoid_print
+                  //     print("Can't launch $url");
+                  //   }
+                  //   print('live streaming clicked');
+                  // }
+                  ),
               SizedBox(
-                height: 180,
+                height: 320,
               ),
               Divider(),
               ListTile(
@@ -341,7 +475,7 @@ class _LodingState extends State<Loding> {
                                   tag: "cctv",
                                   onTap: cctv,
                                   title: "CCTV",
-                                  subtitle: "녹화영상 확인",
+                                  subtitle: "실시간/녹화영상 확인",
                                   gradientStartColor: Color(0xffFC67A7),
                                   gradientEndColor: Color(0xffF6815B),
                                   icons: SvgAsset(
@@ -359,7 +493,7 @@ class _LodingState extends State<Loding> {
                                   tag: "register",
                                   onTap: adddevice1,
                                   title: "기기등록",
-                                  subtitle: "+",
+                                  subtitle: "자신의 기기를 등록하세요!",
                                   gradientStartColor: Color(0xff441DFC),
                                   gradientEndColor: Color(0xffF6815B),
                                   icons: SvgAsset(
@@ -406,7 +540,7 @@ class _LodingState extends State<Loding> {
   }
 
   void cctv() {
-    Get.to(() => VideoPlay(), transition: Transition.rightToLeft);
+    Get.to(() => const WebViewExample(), transition: Transition.rightToLeft);
   }
 
   void adddevice1() {
@@ -418,10 +552,18 @@ class _LodingState extends State<Loding> {
   }
 
   void adddevice2() {
-    Get.to(() => DeviceData(), transition: Transition.rightToLeft);
+    Get.to(() => const DeviceData(), transition: Transition.rightToLeft);
   }
 
   void mypage() {
-    Get.to(() => MyPage4(), transition: Transition.rightToLeft);
+    Get.to(() => const UserData(), transition: Transition.rightToLeft);
+  }
+
+  void noticeboard() {
+    Get.to(() => const NoticeBoard(), transition: Transition.rightToLeft);
+  }
+
+  void settingpage() {
+    Get.to(() => Setting(), transition: Transition.rightToLeft);
   }
 }

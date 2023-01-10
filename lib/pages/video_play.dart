@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter/views/home_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:project_flutter/pages/mysql.dart';
 import 'package:project_flutter/pages/data_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VideoPlay extends StatefulWidget {
   const VideoPlay({
@@ -14,16 +17,9 @@ class VideoPlay extends StatefulWidget {
 }
 
 class _VideoPlayState extends State<VideoPlay> {
-  //------------------------------------------로그인 정보 가져오기---------------//
-  String userinfo = '';
-  // String userid = '';
+  //----------------------------------------
 
-  @override
-  void initState() {
-    loadVideoPlayer();
-    super.initState();
-    setData();
-  }
+  String userinfo = '';
 
   void setData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,9 +33,7 @@ class _VideoPlayState extends State<VideoPlay> {
       });
     } catch (e) {}
   }
-  //------------------------------------여기까지----------------------------------
 
-  //----------------------------------------
   Future<List<Video>> getSQLData() async {
     final List<Video> videoList = [];
     final Mysql db = Mysql();
@@ -63,111 +57,125 @@ class _VideoPlayState extends State<VideoPlay> {
     });
     return videoList;
   }
+
   //------------------------------------------------
 
   late VideoPlayerController controller;
 
-  loadVideoPlayer() {
-    controller = VideoPlayerController.network(
-        'http://34.64.233.244:9898/download/video2022-12-21_10-24-08-503542.mp4');
-    // 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
+  var urls = '';
+
+  @override
+  void initState() {
+    loadVideoPlayer(urls);
+    super.initState();
+    setData();
+  }
+
+  loadVideoPlayer(String urls) {
+    controller = VideoPlayerController.network(urls);
     controller.addListener(() {
       setState(() {});
     });
-    controller.initialize().then((value) {
+    controller.initialize().then((urls) {
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("영상 확인"),
+        title: Text("녹화영상"),
+        centerTitle: true,
         backgroundColor: Color(0xff1160aa),
+        // actions: <Widget>[
+        //   TextButton(
+        //       child: Image.asset(
+        //         // width: 50,
+        //         // height: 35,
+        //         'assets/icons/live.png',
+        //         fit: BoxFit.fill,
+        //       ),
+        //       onPressed: () async {
+        //         final url = Uri.parse(
+        //           'http://192.168.41.191:5000',
+        //         );
+        //         if (await canLaunchUrl(url)) {
+        //           launchUrl(url);
+        //         } else {
+        //           // ignore: avoid_print
+        //           print("Can't launch $url");
+        //         }
+        //         print('live streaming clicked');
+        //       })
+        // ],
       ),
-      body: SizedBox(
-        child: Container(
-            //resizeToAvoidBottomInset: true,
-            //body: SafeArea(
-            child: ListView(children: [
-          AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(controller),
-          ),
-          Container(
-            //duration of video
-            child:
-                Text("Total Duration: " + controller.value.duration.toString()),
-          ),
-          Container(
-              // width: 48,
-              // height: 48,
-              child: VideoProgressIndicator(controller,
-                  allowScrubbing: true,
-                  colors: VideoProgressColors(
-                    backgroundColor: Colors.redAccent,
-                    playedColor: Colors.green,
-                    bufferedColor: Colors.purple,
-                  ))),
-          Container(
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      if (controller.value.isPlaying) {
-                        controller.pause();
-                      } else {
-                        controller.play();
-                      }
+      body: Container(
+          child: ListView(children: [
+        AspectRatio(
+          aspectRatio: controller.value.aspectRatio,
+          child: VideoPlayer(controller),
+        ),
+        Container(
+          //duration of video
+          child:
+              Text("Total Duration: " + controller.value.duration.toString()),
+        ),
+        Container(
+            child: VideoProgressIndicator(controller,
+                allowScrubbing: true,
+                colors: VideoProgressColors(
+                    backgroundColor: Colors.blueGrey,
+                    bufferedColor: Colors.blueGrey,
+                    playedColor: Colors.blueAccent))),
+        Container(
+          child: Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    if (controller.value.isPlaying) {
+                      controller.pause();
+                    } else {
+                      controller.play();
+                    }
 
-                      setState(() {});
-                    },
-                    icon: Icon(controller.value.isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow)),
-                IconButton(
-                    onPressed: () {
-                      controller.seekTo(Duration(seconds: 0));
+                    setState(() {});
+                  },
+                  icon: Icon(controller.value.isPlaying
+                      ? Icons.pause
+                      : Icons.play_arrow)),
+              IconButton(
+                  onPressed: () {
+                    controller.seekTo(Duration(seconds: 0));
 
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.stop))
-              ],
-            ),
+                    setState(() {});
+                  },
+                  icon: Icon(Icons.stop))
+            ],
           ),
-          SizedBox(
-            width: 48,
-            height: 48,
-            //height: 20,
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          child: Text(
+            '저장된 영상 내역',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
-          Container(
-            child: Text(
-              '저장된 영상 내역',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          //new Row
-          //new Row(
-          //  children: <Widget>[
-          //    Expanded(
-          //        child: SizedBox(
-          //      height: 50,
-          //      child: getDBData(),
-          //    ))
-          //  ],
-          //)
-          Container(
-              child: SizedBox(
-            // width: 20,
-            // height: 20,
-            width: 100,
-            child: getDBData(),
-            //height: 300,
-          )),
-        ])),
-      ),
+        ),
+        Container(
+            child: SizedBox(
+          child: getDBData(),
+          height: 300,
+        )),
+      ])),
     );
   }
 
@@ -181,30 +189,45 @@ class _VideoPlayState extends State<VideoPlay> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              final data = snapshot.data as List;
-              return ListTile(
-                leading: Text(
-                  data[index].file_name.toString(),
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                //title: Text(
-                //  data[index].Datetime.toString(),
-                //  style: const TextStyle(
-                //    fontSize: 20,
-                //    fontWeight: FontWeight.bold,
-                //  ),
-                //),
-                //subtitle: Text(
-                //  data[index].Datetime.toString(),
-                //  style: const TextStyle(fontSize: 20),
-                //),
-              );
-            },
-          );
+          return new Container(
+              child: new Center(
+                  child: new Column(children: <Widget>[
+            Expanded(
+                child: SizedBox(
+                    height: 200.0,
+                    child: new ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final data = snapshot.data as List;
+                        String urls =
+                            'http://34.64.233.244:9898/download/${data[index].file_name.toString()}';
+
+                        return Card(
+                            child: Container(
+                                child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              leading: Container(
+                                height: 100,
+                                width: 100,
+                                child: Text(
+                                  data[index].file_name.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              selected: true,
+                              onTap: () {
+                                print(urls);
+                                loadVideoPlayer(urls);
+                              },
+                            ),
+                          ],
+                        )));
+                      },
+                    )))
+          ])));
         });
   }
   //---------------------------------------------
